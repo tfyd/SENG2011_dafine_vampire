@@ -2,7 +2,7 @@ from BeautifulPrint import BeautifulPrint
 
 # An abstracted class to print levelised menu.
 # Examples & usages are at the end of this file.
-class InterfaceLevel():
+class MenuLevel():
     _subLevels = []
     _welcomeMessage = None
     _id = ''
@@ -41,7 +41,7 @@ class InterfaceLevel():
                 return
             
             if (self._backable) and (userInput == 'q'): 
-                InterfaceLevel.quitSystem()
+                MenuLevel.quitSystem()
 
             for em in self._subLevels:
                 if userInput == em.id:
@@ -59,15 +59,15 @@ class InterfaceLevel():
             string += '  q. Quit system\n'
         return string
     
-    def addItem(self, interfaceLevel):
-        if (self._backable) and (interfaceLevel.id in ['b', 'q']):
+    def addItem(self, MenuLevel):
+        if (self._backable) and (MenuLevel.id in ['b', 'q']):
             raise Exception('Bad ID')
 
         for em in self._subLevels:
-            if (em.id == interfaceLevel.id):
+            if (em.id == MenuLevel.id):
                 raise Exception('Bad ID')
 
-        self._subLevels.append(interfaceLevel)
+        self._subLevels.append(MenuLevel)
 
     def __str__(self):
         return '  ' + self.id + '. ' + self.title
@@ -100,7 +100,7 @@ if __name__ == "__main__":
         import random
 
         # A random subtree
-        dynamicRoot = InterfaceLevel(
+        dynamicRoot = MenuLevel(
             welcomeMessage= '= Random Number =\n '
                             + str(random.randint(1000000000, 9999999999)) + '\n'
                             '================='
@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
         nMenu = random.randint(1, 3)
         for i in range(nMenu):
-            dynamicNode = InterfaceLevel(
+            dynamicNode = MenuLevel(
                 id=str(i),
                 title='Number of sub-item can be dynamic generated'
             )
@@ -119,27 +119,27 @@ if __name__ == "__main__":
 
     # Tree-like structure
     # Initialise as a tree node
-    root = InterfaceLevel(
+    root = MenuLevel(
         welcomeMessage='Root node',
         backable=False,
         inputPrompt='Select a option above:'
     )
 
     # A subtree level
-    subtree = InterfaceLevel(
+    subtree = MenuLevel(
         id='1',
         title='Subtree'
     )
 
     # Leaf node should always have a onSelect method to specify what it is doing
-    leaf = InterfaceLevel(
+    leaf = MenuLevel(
         id='1',
         title='Leaf',
         onSelect=showLeaf # pass a function as a param (NOT CALLING IT)
     )
 
     # Or you can manually call run() later to make the node dynamic
-    dynamicNode = InterfaceLevel(
+    dynamicNode = MenuLevel(
         id='2',
         title='Dynamic-Loaded Node',
         onSelect=dynamicLoad # pass a function as a param (NOT CALLING IT)
