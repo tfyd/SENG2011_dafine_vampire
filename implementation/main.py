@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from BeautifulPrint import BeautifulPrint
+from DonationManager import donationManager
 
 def roleSelect():
     while True:
@@ -14,7 +15,9 @@ def roleSelect():
         BeautifulPrint.infoBlue('Please specify your role: ', end='')
         role = input()
         if role == '1':
-            print('Selected Donation Manager')
+            donation_manager = donationManager()
+            donation_manager.run()
+
             return
         if role == '2':
             print('Selected Tester')
