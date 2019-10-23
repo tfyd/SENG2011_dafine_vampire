@@ -1,34 +1,22 @@
 from BeautifulPrint import BeautifulPrint
+from InterfaceLevel import InterfaceLevel
+from Role import Role
 
-class DonationManager():
+class DonationManager(Role):
 
-    def run(self):
-        while True:
-            BeautifulPrint.infoBlue('You have signed in as a: Donation Manager')
-            BeautifulPrint.infoPurple(''
-                                    'The following actions are available to you' '\n'
-                                    '  1. Insert new blood' '\n'
-                                    '  2. View list of blood' '\n'
-                                    '  3. ...' '\n'
-                                    '  b. Go back' '\n'
-                                    '  q. Quit'
-                                    )
+    def showMenu(self):
+        thisLevel = InterfaceLevel(
+            welcomeMessage=
+                'You have signed in as a: Donation Manager.\n'
+                'The following actions are available to you',
+            inputPrompt='Please enter an action: '
+        )
+        thisLevel.addItem(InterfaceLevel('1', 'Insert blood', onSelect=self.insertBlood))
+        thisLevel.addItem(InterfaceLevel('2', 'View blood', onSelect=self.viewBlood))
+        thisLevel.addItem(InterfaceLevel('3', '...'))
 
-            BeautifulPrint.infoBlue('Please enter an action: ', end='')
-            action = input()
-
-            if action == '1':
-                self.insertBlood()
-
-            elif action == '2':
-                self.viewBlood()
-            
-            elif action == 'b':
-                return
-            
-            elif action == 'q':
-                return 'q'
-
+        thisLevel.select()
+        
 
     def insertBlood(self):
         BeautifulPrint.infoPurple('Please enter blood details...')
