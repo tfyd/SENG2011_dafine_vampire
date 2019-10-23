@@ -1,0 +1,2 @@
+class StorehouseManager():
+    pass

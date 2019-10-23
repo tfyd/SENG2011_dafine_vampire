@@ -12,5 +12,8 @@ What should we use??
 + json files
 + sqlite files
 
+### Levelised Menu
+Check `MenuLevel.py` file. Run it and see what happened!
+
 ### Beautiful Print
-Check `Beautiful.py` file. 
+Check `Beautiful.py` file. Run it and see what happened!
