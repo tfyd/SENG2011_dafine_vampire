@@ -1,4 +1,4 @@
-from InterfaceLevel import InterfaceLevel
+from MenuLevel import MenuLevel
 from Role import Role
 
 class Tester(Role):
@@ -12,13 +12,13 @@ class Tester(Role):
 
     
     def showMenu(self):
-        thisLevel = InterfaceLevel(
+        thisLevel = MenuLevel(
             welcomeMessage='You are a tester now.',
             inputPrompt='What do you want to do? '
         )
-        thisLevel.addItem(InterfaceLevel('1', 'Test blood', onSelect=self.test))
-        thisLevel.addItem(InterfaceLevel('2', 'Placeholder'))
-        thisLevel.addItem(InterfaceLevel('3', 'Placeholder'))
+        thisLevel.addItem(MenuLevel('1', 'Test blood', onSelect=self.test))
+        thisLevel.addItem(MenuLevel('2', 'Placeholder'))
+        thisLevel.addItem(MenuLevel('3', 'Placeholder'))
 
         thisLevel.select()
         
