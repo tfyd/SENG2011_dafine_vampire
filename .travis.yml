@@ -7,4 +7,4 @@ install:
 before_script:
   - "flake8 ./implementation/*.py --ignore=E131 --select=E999,E1,E4,E70,E74,E9,W6,N801,N804,N805,N807,F"
 script:
-  - "echo q | python3 ./implementation/main.py" # a trivial test
+  - "echo -e '1\nb\n2\nb\n3\nb\n4\nb\nq\n' | python3 ./implementation/main.py" # a trivial test that accessing every first level
