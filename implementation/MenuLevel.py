@@ -101,8 +101,8 @@ if __name__ == "__main__":
 
         # A random subtree
         dynamicRoot = MenuLevel(
-            welcomeMessage= '= Random Number =\n '
-                            + str(random.randint(1000000000, 9999999999)) + '\n'
+            welcomeMessage= '= Random Number =\n ' +
+                            str(random.randint(1000000000, 9999999999)) + '\n'
                             '================='
         )
 

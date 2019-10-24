@@ -1,9 +1,8 @@
-from BeautifulPrint import BeautifulPrint
 from MenuLevel import MenuLevel
 from Tester import Tester
 from DonationManager import DonationManager
-from Doctor import Doctor
-from StorehouseManager import StorehouseManager
+from Doctor import Doctor # noqa
+from StorehouseManager import StorehouseManager # noqa
 
 class VampireSystem():
     interfaceRootLevel = None
