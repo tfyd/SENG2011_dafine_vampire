@@ -1,6 +1,9 @@
 from BeautifulPrint import BeautifulPrint
 from MenuLevel import MenuLevel
 from Role import Role
+from UntestedBlood import UntestedBlood
+import time
+import re
 
 class DonationManager(Role):
 
@@ -17,12 +20,18 @@ class DonationManager(Role):
 
         thisLevel.select()
         
-
     def insertBlood(self):
-        BeautifulPrint.infoPurple('Please enter blood details...')
-        input('Assume doing something... press enter to go back...')
+        newBlood = UntestedBlood(int(time.time()))
+        newBlood.addToFile()
+        BeautifulPrint.success('Insert ' + str(newBlood) + ' successed. Please insert the blood to the storehouse')
+        input('Press enter to go back...')
 
 
     def viewBlood(self):
-        BeautifulPrint.infoPurple('Here is a list of all blood samples...')
-        input('Assume doing something... press enter to go back...')
+        BeautifulPrint.bold('We currently have these untested blood.')
+        bloodList = ''
+        with open("./dataset/UntestedBlood.json") as f:
+            for line in f:
+                bloodList += "\n" + re.search(r"\d+", line).group(0)
+        BeautifulPrint.infoPurple(bloodList)
+        input('Press enter to go back...')

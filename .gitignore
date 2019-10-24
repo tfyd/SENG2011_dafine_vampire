@@ -1,4 +1,4 @@
-./implementation/dataset/
+implementation/dataset/*
 
 # Editors
 .vscode/
