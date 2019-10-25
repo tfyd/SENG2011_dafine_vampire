@@ -4,7 +4,6 @@ from Role import Role
 from UntestedBlood import UntestedBlood
 import json
 import time
-import re
 
 class DonationManager(Role):
 
