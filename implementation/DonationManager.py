@@ -3,7 +3,6 @@ from JsonWriter import JsonWriter
 from MenuLevel import MenuLevel
 from Role import Role
 from UntestedBlood import UntestedBlood
-import json
 import time
 
 class DonationManager(Role):
@@ -49,7 +48,7 @@ class DonationManager(Role):
         print('We currently have ', end='')
         BeautifulPrint.bold(str(len(untestedList)), end='')
         print(' untested blood.')
-        
+
         for blood in untestedList:
             BeautifulPrint.infoPurple(str(UntestedBlood(blood['id'])))
 
