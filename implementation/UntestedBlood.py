@@ -1,5 +1,5 @@
-import json
 from Blood import Blood
+
 class UntestedBlood(Blood):
     def __init__(self, id):
         super().__init__(id)
