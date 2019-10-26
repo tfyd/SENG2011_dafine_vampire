@@ -3,6 +3,7 @@ from JsonWriter import JsonWriter
 from MenuLevel import MenuLevel
 from Role import Role
 from UntestedBlood import UntestedBlood
+from UntestedBloodList import UntestedBloodList
 import time
 
 class DonationManager(Role):
@@ -23,33 +24,18 @@ class DonationManager(Role):
     def insertBlood(self):
         newBlood = UntestedBlood(int(time.time()))
 
-        untestedList = JsonWriter.parseJsonFromFile(
-            filename='./dataset/UntestedBlood.json', 
-            defaultValue=[]
-        )
-
-        untestedList.append(newBlood.toDictionary())
-        
-        JsonWriter.writeJsonToFile(
-            filename='./dataset/UntestedBlood.json',
-            data=untestedList
-        )
+        UntestedBloodList().addBlood(newBlood)
 
         BeautifulPrint.success('Insert ' + str(newBlood) + ' successed. Please insert the blood to the storehouse')
         input('Press enter to go back...')
 
-
     def viewBlood(self):
-        untestedList = JsonWriter.parseJsonFromFile(
-            filename='./dataset/UntestedBlood.json', 
-            defaultValue=[]
-        )
-
+        l = UntestedBloodList()
+        
         print('We currently have ', end='')
-        BeautifulPrint.bold(str(len(untestedList)), end='')
+        BeautifulPrint.bold(str(l.count), end='')
         print(' untested blood.')
 
-        for blood in untestedList:
-            BeautifulPrint.infoPurple(str(UntestedBlood(blood['id'])))
+        BeautifulPrint.infoPurple(str(l), end='')
 
         input('Press enter to go back...')
