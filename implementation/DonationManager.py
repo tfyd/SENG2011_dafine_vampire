@@ -1,5 +1,4 @@
 from BeautifulPrint import BeautifulPrint
-from JsonWriter import JsonWriter
 from MenuLevel import MenuLevel
 from Role import Role
 from UntestedBlood import UntestedBlood
@@ -30,12 +29,12 @@ class DonationManager(Role):
         input('Press enter to go back...')
 
     def viewBlood(self):
-        l = UntestedBloodList()
+        list = UntestedBloodList()
         
         print('We currently have ', end='')
-        BeautifulPrint.bold(str(l.count), end='')
+        BeautifulPrint.bold(str(list.count), end='')
         print(' untested blood.')
 
-        BeautifulPrint.infoPurple(str(l), end='')
+        BeautifulPrint.infoPurple(str(list), end='')
 
         input('Press enter to go back...')
