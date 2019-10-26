@@ -6,5 +6,5 @@ class Blood(ABC):
         self.id = id
 
     @abstractmethod
-    def addToFile(self):
+    def toDictionary(self):
         pass
