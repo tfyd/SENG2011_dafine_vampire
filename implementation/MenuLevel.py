@@ -26,7 +26,7 @@ class MenuLevel():
             self._onSelect()
         else:
             self.run()
-
+    
     def run(self):
         while True:
             print('') # give some space here
@@ -68,6 +68,14 @@ class MenuLevel():
                 raise Exception('Bad ID')
 
         self._subLevels.append(MenuLevel)
+
+    def removeItem(self, id):
+        target = None
+        for em in self._subLevels:
+            if (em.id == MenuLevel.id):
+                target = em
+        if target is not None:
+            self._subLevels.remove(target)
 
     def __str__(self):
         return '  ' + self.id + '. ' + self.title

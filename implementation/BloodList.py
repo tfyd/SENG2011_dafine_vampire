@@ -50,9 +50,10 @@ class BloodList(ABC):
         target = None
         for blood in self.list:
             if blood.id == id:
+                target = blood
                 break
-        
-        self.list.remove(target) # TODO: Default Method
+        if target is not None:
+            self.list.remove(target) # TODO: Default Method
         self.save()
         
     # Get and remove, then save to file
@@ -60,8 +61,3 @@ class BloodList(ABC):
         target = self.getBlood(id)
         self.removeBlood(id)
         return target
-
-
-    
-
-
