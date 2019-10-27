@@ -1,3 +1,4 @@
+
 from BloodList import BloodList
 from TestedBlood import TestedBlood
 from JsonWriter import JsonWriter
@@ -18,5 +19,4 @@ class TestedBloodList(BloodList):
                 type=blood['type'],
                 expiration=blood['expiration']
             ))
-
 

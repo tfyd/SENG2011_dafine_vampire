@@ -43,7 +43,7 @@ class VampireSystem():
         root.addItem(MenuLevel(
             id='3',
             title='Doctor',
-            # onSelect=Doctor().showMenu
+            onSelect=Doctor().showMenu
         ))
         root.addItem(MenuLevel(
             id='4',

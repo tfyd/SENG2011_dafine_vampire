@@ -1,4 +1,5 @@
 from Blood import Blood
+
 class TestedBlood(Blood):
     def __init__(self, id, type, expiration):
         super().__init__(id)
@@ -16,4 +17,3 @@ class TestedBlood(Blood):
             'type': str(self.type),
             'expiration': int(self.expiration)
         }
-        

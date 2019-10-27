@@ -39,6 +39,8 @@ class Tester(Role):
                 expiration = expiration.timestamp()
             except:
                 expiration = None
+
+
         TestedBloodList().addBlood(TestedBlood(toBeTested.id, bloodType, expiration))
         BeautifulPrint.success('Blood sample {} has been tested.'.format(str(toBeTested.id)))
 
