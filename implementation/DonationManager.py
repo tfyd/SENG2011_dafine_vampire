@@ -4,6 +4,7 @@ from Role import Role
 from UntestedBlood import UntestedBlood
 from UntestedBloodList import UntestedBloodList
 import time
+from datetime import datetime 
 
 class DonationManager(Role):
 
@@ -21,12 +22,22 @@ class DonationManager(Role):
         thisLevel.select()
         
     def insertBlood(self):
-        newBlood = UntestedBlood(int(time.time()))
-
-        UntestedBloodList().addBlood(newBlood)
-
-        BeautifulPrint.success('Insert ' + str(newBlood) + ' successed. Please insert the blood to the storehouse')
-        input('Press enter to go back...')
+        while(1):
+            try:
+                retrivalString = input('Enter retrival date (DD/MM/YYYY HH:mm): ')
+                if retrivalString != 'q':
+                    retrivalDate = datetime.strptime(retrivalString, '%d/%m/%Y %H:%M')
+                    retrivalDate = retrivalDate.timestamp()
+                    newBlood = UntestedBlood(int(time.time()), retrivalDate)
+                    UntestedBloodList().addBlood(newBlood)
+                    BeautifulPrint.success('Insert ' + str(newBlood) + ' successed. \nPlease insert the blood to the storehouse')
+                    input('Press enter to go back...')
+                else:
+                    BeautifulPrint.error("Insertion cancelled")
+                break
+            except ValueError:
+                BeautifulPrint.error("Please insert the date in [DD/MM/YYYY HH:mm] format")
+                BeautifulPrint.error("Insert 'q' to go back")
 
     def viewBlood(self):
         list = UntestedBloodList()
