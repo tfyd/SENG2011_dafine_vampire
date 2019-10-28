@@ -34,7 +34,7 @@ class Tester(Role):
         expiration = None
         while expiration is None:        
             try:
-                expirationString = input('Enter expiration date(DD/MM/YYYY HH:mm): ')
+                expirationString = input('Enter expiration date (DD/MM/YYYY HH:mm): ')
                 expiration = datetime.strptime(expirationString, '%d/%m/%Y %H:%M')
                 expiration = expiration.timestamp()
             except:
