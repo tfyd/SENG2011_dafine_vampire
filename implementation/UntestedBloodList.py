@@ -13,6 +13,6 @@ class UntestedBloodList(BloodList):
             defaultValue = []
         )
         for blood in data:
-            self.list.append(UntestedBlood(blood['id'], blood['retrivalDate']))
+            self.list.append(UntestedBlood(blood['id'], blood['retrievalDate']))
 
 

@@ -17,6 +17,7 @@ class TestedBloodList(BloodList):
             self.list.append(TestedBlood(
                 id=blood['id'],
                 type=blood['type'],
-                expiration=blood['expiration']
+                expiration=blood['expiration'],
+                retrieval=blood['retrievalDate']
             ))
 

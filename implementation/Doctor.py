@@ -15,7 +15,7 @@ class Doctor():
         )
         thisLevel.addItem(MenuLevel('1', 'View Blood', onSelect=self.viewBlood))
         thisLevel.addItem(MenuLevel('2', 'Reserve Blood', onSelect=self.reserveBlood))
-        thisLevel.addItem(MenuLevel('3', '...'))
+        thisLevel.addItem(MenuLevel('3', 'Search By Blood Type', onSelect=self.viewBloodType))
 
         thisLevel.select()
 
@@ -33,8 +33,29 @@ class Doctor():
         # TODO sort list by expiration date
         for blood in testedList.list:
             expirationString = datetime.utcfromtimestamp(blood.expiration).strftime('%d-%m-%Y %H:%M')
+            retrievalString = datetime.utcfromtimestamp(blood.retrievalDate).strftime('%d-%m-%Y %H:%M')
             BeautifulPrint.infoPurple(
-                'ID:' + str(blood.id) + '  Blood Type:' + str(blood.type) + '  Expiration Date: ' + expirationString,
+                'ID:' + str(blood.id) + ' |  Blood Type:' + str(
+                    blood.type) + ' |  Expiration Date: ' + expirationString + ' | Retrieval Date: ' +
+                retrievalString,
                 end='\n')
+
+        input('Press enter to go back...')
+
+    def viewBloodType(self):
+        bloodtype = input('Please enter a type of blood : ')
+
+        testedList = TestedBloodList()
+
+        for blood in testedList.list:
+            if blood.type == bloodtype:
+                expirationString = datetime.utcfromtimestamp(blood.expiration).strftime('%d-%m-%Y %H:%M')
+                retrievalString = datetime.utcfromtimestamp(blood.retrievalDate).strftime('%d-%m-%Y %H:%M')
+                BeautifulPrint.infoPurple(
+                    'ID:' + str(blood.id) + ' | Blood Type:' + str(
+                        blood.type) + ' | Expiration Date: ' + expirationString + ' | Retrieval Date: ' +
+                    retrievalString,
+                    retrievalString,
+                    end='\n')
 
         input('Press enter to go back...')

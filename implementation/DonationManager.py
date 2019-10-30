@@ -24,13 +24,13 @@ class DonationManager(Role):
     def insertBlood(self):
         while(1):
             try:
-                retrivalString = input('Enter retrival date (DD/MM/YYYY HH:mm): ')
-                if retrivalString != 'q':
-                    retrivalDate = datetime.strptime(retrivalString, '%d/%m/%Y %H:%M')
-                    retrivalDate = retrivalDate.timestamp()
-                    newBlood = UntestedBlood(int(time.time()), retrivalDate)
+                retrievalString = input('Enter retrival date (DD/MM/YYYY HH:mm): ')
+                if retrievalString != 'q':
+                    retrievalDate = datetime.strptime(retrievalString, '%d/%m/%Y %H:%M')
+                    retrievalDate = retrievalDate.timestamp()
+                    newBlood = UntestedBlood(int(time.time()), retrievalDate)
                     UntestedBloodList().addBlood(newBlood)
-                    BeautifulPrint.success('Insert ' + str(newBlood) + ' successed. \nPlease insert the blood to the storehouse')
+                    BeautifulPrint.success('Insert ' + str(newBlood) + ' succeeded. \nPlease insert the blood to the storehouse')
                     input('Press enter to go back...')
                 else:
                     BeautifulPrint.error("Insertion cancelled")

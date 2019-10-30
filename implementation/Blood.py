@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 
 class Blood(ABC):
 
-    def __init__(self, id, retrivalDate):
+    def __init__(self, id, retrievalDate):
         self.id = id
-        self.retrivalDate = retrivalDate
+        self.retrievalDate = retrievalDate
 
     @abstractmethod
     def toDictionary(self):
