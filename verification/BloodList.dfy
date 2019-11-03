@@ -56,6 +56,9 @@ class {:autocontracts} BloodList
   requires exists t :: 0 <= t <= upto && list[t] == blood;
   ensures upto == old(upto) - 1;
   ensures bloodSet == old(bloodSet) - {blood};
+  // ensures exists t :: 0 <= t <= old(upto) && old(list)[t] == blood 
+  //                    && forall p :: 0 <= p < t ==> list[p] == old(list)[p] 
+  //                    && forall q :: t < q <= old(upto) ==> list[q-1] == old(list)[q];
   {
     var i:=0;
 
@@ -64,7 +67,7 @@ class {:autocontracts} BloodList
     invariant forall k :: 0 <= k < i ==> list[k] != blood;
     decreases upto - i;
     {
-      if list[i]==blood
+      if list[i] == blood
       {
           forall(j | i < j <= upto) 
           {
