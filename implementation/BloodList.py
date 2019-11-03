@@ -3,6 +3,7 @@ from JsonWriter import JsonWriter
 from BeautifulPrint import BeautifulPrint
 from collections import Counter
 
+
 class BloodList(ABC):
     list = []
 
@@ -25,7 +26,7 @@ class BloodList(ABC):
     def save(self):
         dictList = []
         for elem in self.list:
-            dictList.append(elem.toDictionary()) # TODO: Default Method
+            dictList.append(elem.toDictionary())  # TODO: Default Method
         JsonWriter.writeJsonToFile(self.jsonfile, dictList)
 
     # Used for printing on screen
@@ -37,9 +38,9 @@ class BloodList(ABC):
 
     # auto save to file after finished
     def addBlood(self, blood):
-        self.list.append(blood) # TODO: Default Method
+        self.list.append(blood)  # TODO: Default Method
         self.save()
-    
+
     # search by id
     def getBlood(self, id):
         for blood in self.list:
@@ -55,26 +56,11 @@ class BloodList(ABC):
                 target = blood
                 break
         if target is not None:
-            self.list.remove(target) # TODO: Default Method
+            self.list.remove(target)  # TODO: Default Method
         self.save()
-        
+
     # Get and remove, then save to file
     def extractBlood(self, id):
         target = self.getBlood(id)
         self.removeBlood(id)
         return target
-
-    def checkStorage(self):
-
-        # All valid blood types
-        keys = ['O', 'O+', '0-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
-
-        # Using 3 as a dummy value, replace with real value later
-        for key in keys:
-            if self.list.count(key) < 3:
-                BeautifulPrint.error('Blood Type: ' + key + ' currently has ' + str(self.list.count(key)) +
-                                     ' Blood in stock. Please find more stock!')
-
-
-
-

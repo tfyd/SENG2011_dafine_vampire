@@ -1,7 +1,7 @@
-
 from BloodList import BloodList
 from TestedBlood import TestedBlood
 from JsonWriter import JsonWriter
+
 
 class ReservedBloodList(BloodList):
     jsonfile = './dataset/ReservedBlood.json'
@@ -10,8 +10,8 @@ class ReservedBloodList(BloodList):
         super().__init__()
         self.list = []
         data = JsonWriter.parseJsonFromFile(
-            filename = self.jsonfile,
-            defaultValue = []
+            filename=self.jsonfile,
+            defaultValue=[]
         )
         for blood in data:
             self.list.append(TestedBlood(
@@ -19,5 +19,4 @@ class ReservedBloodList(BloodList):
                 retrievalDate=blood['retrievalDate'],
                 type=blood['type'],
                 expiration=blood['expiration']
-        ))
-
+            ))
