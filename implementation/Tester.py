@@ -30,7 +30,17 @@ class Tester(Role):
 
     def test(self, id):
         toBeTested = UntestedBloodList().extractBlood(id)
-        bloodType = input('Enter blood type: ')
+        validBlood =  ['O', 'O+', '0-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
+        checkedBloodType = None
+
+        while checkedBloodType is None:
+            BeautifulPrint.warning('Valid Blood Types are: O, O+, O-, A+, A-, B+, B-, AB+, AB-')
+            bloodType = input('Enter blood type: ')
+            if bloodType in validBlood:
+                checkedBloodType = bloodType
+            else:
+                BeautifulPrint.error('Please enter a valid blood type.')
+
         expiration = None
         while expiration is None:        
             try:
@@ -40,7 +50,7 @@ class Tester(Role):
             except:
                 expiration = None
 
-        TestedBloodList().addBlood(TestedBlood(toBeTested.id, toBeTested.retrievalDate, bloodType, expiration))
+        TestedBloodList().addBlood(TestedBlood(toBeTested.id, toBeTested.retrievalDate, checkedBloodType, expiration))
 
         BeautifulPrint.success('Blood sample {} has been tested.'.format(str(toBeTested.id)))
         input('Press enter to continue')
