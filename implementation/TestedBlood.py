@@ -1,8 +1,10 @@
 from Blood import Blood
 
 class TestedBlood(Blood):
-    def __init__(self, id, type, expiration, retrieval):
-        super().__init__(id, retrieval)
+
+    def __init__(self, id, retrievalDate, type, expiration):
+        super().__init__(id)
+        self.retrievalDate = retrievalDate
         self.type = type
         self.expiration = expiration
 
@@ -14,7 +16,7 @@ class TestedBlood(Blood):
     def toDictionary(self):
         return {
             'id': int(self.id),
+            'retrievalDate': str(self.retrievalDate),
             'type': str(self.type),
-            'expiration': int(self.expiration),
-            'retrievalDate': int(self.retrievalDate)
+            'expiration': int(self.expiration)
         }

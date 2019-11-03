@@ -2,6 +2,7 @@ from BeautifulPrint import BeautifulPrint
 from MenuLevel import MenuLevel
 from TestedBloodList import TestedBloodList
 from datetime import datetime
+from Dispose import Dispose
 
 
 class Doctor():
@@ -24,16 +25,16 @@ class Doctor():
         input('Press enter to go back...')
 
     def viewBlood(self):
+        Dispose().dispose()
         testedList = TestedBloodList()
-
         print('We currently have ', end='')
         BeautifulPrint.bold(str(testedList.count), end='')
         print(' available blood supplies.')
 
         # TODO sort list by expiration date
         for blood in testedList.list:
-            expirationString = datetime.utcfromtimestamp(blood.expiration).strftime('%d-%m-%Y %H:%M')
-            retrievalString = datetime.utcfromtimestamp(blood.retrievalDate).strftime('%d-%m-%Y %H:%M')
+            expirationString = datetime.fromtimestamp(blood.expiration).strftime('%d-%m-%Y %H:%M')
+            retrievalString = datetime.fromtimestamp(blood.retrievalDate).strftime('%d-%m-%Y %H:%M')
             BeautifulPrint.infoPurple(
                 'ID:' + str(blood.id) + ' |  Blood Type:' + str(
                     blood.type) + ' |  Expiration Date: ' + expirationString + ' | Retrieval Date: ' +

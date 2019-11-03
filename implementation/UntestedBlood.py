@@ -3,7 +3,9 @@ from datetime import datetime
 
 class UntestedBlood(Blood):
     def __init__(self, id, retrievalDate):
-        super().__init__(id, retrievalDate)
+        super().__init__(id)
+        self.retrievalDate = retrievalDate
+
 
     def __str__(self):
         dt = datetime.fromtimestamp(self.retrievalDate)

@@ -40,10 +40,9 @@ class Tester(Role):
             except:
                 expiration = None
 
+        TestedBloodList().addBlood(TestedBlood(toBeTested.id, toBeTested.retrievalDate, bloodType, expiration))
 
-        TestedBloodList().addBlood(TestedBlood(toBeTested.id, bloodType, expiration, toBeTested.retrievalDate))
         BeautifulPrint.success('Blood sample {} has been tested.'.format(str(toBeTested.id)))
-
         input('Press enter to continue')
 
 

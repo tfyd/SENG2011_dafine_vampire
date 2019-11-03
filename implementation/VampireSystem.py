@@ -48,7 +48,7 @@ class VampireSystem():
         root.addItem(MenuLevel(
             id='4',
             title='Storehouse Manager',
-            # onSelect=StorehouseManager().showMenu
+            onSelect=StorehouseManager().showMenu
         ))
 
     def quitSystem(self):
