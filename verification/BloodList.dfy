@@ -49,6 +49,7 @@ class {:autocontracts} BloodList
 
   }
 
+
   method removeBlood(blood: int)
   // requires Valid(); ensures Valid();
   requires upto > 0;
@@ -56,29 +57,37 @@ class {:autocontracts} BloodList
   requires exists t :: 0 <= t <= upto && list[t] == blood;
   ensures upto == old(upto) - 1;
   ensures bloodSet == old(bloodSet) - {blood};
-  // ensures exists t :: 0 <= t <= old(upto) && old(list)[t] == blood 
-  //                    && forall p :: 0 <= p < t ==> list[p] == old(list)[p] 
-  //                    && forall q :: t < q <= old(upto) ==> list[q-1] == old(list)[q];
+  ensures exists t :: 0 <= t <= old(upto) && old(list[t]) == blood
+                      && forall p :: 0 <= p < t ==> list[p] == old(list[p])
+                      && forall q :: t < q <= old(upto) ==> list[q-1] == old(list[q]);
   {
     var i:=0;
-
+    var bloodFound := false;
+    var bloodIndex := -1;
     while i <= upto
     invariant 0 <= i <= upto;
     invariant forall k :: 0 <= k < i ==> list[k] != blood;
+    invariant forall j :: 0 <= j < i ==> list[j] == old(list[j])
+    invariant bloodFound ==> forall l :: bloodIndex < l < i ==> list[l-1] == old(list[l])
     decreases upto - i;
     {
       if list[i] == blood
       {
-          forall(j | i < j <= upto) 
+          bloodFound := true;
+          bloodIndex := i;
+          forall(j | i < j <= upto)
           {
             list[j - 1] := list[j];
           }
+
           bloodSet := bloodSet - {blood};
           break;
       }
       i := i + 1;
     }
+
     upto := upto - 1;
+
   }
 }
 
