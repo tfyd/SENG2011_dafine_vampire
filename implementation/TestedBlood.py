@@ -16,7 +16,7 @@ class TestedBlood(Blood):
     def toDictionary(self):
         return {
             'id': int(self.id),
-            'retrievalDate': str(self.retrievalDate),
+            'retrievalDate': int(self.retrievalDate),
             'type': str(self.type),
             'expiration': int(self.expiration)
         }

@@ -24,7 +24,7 @@ class DonationManager(Role):
     def insertBlood(self):
         while(1):
             try:
-                retrievalString = input('Enter retrival date (DD/MM/YYYY HH:mm): ')
+                retrievalString = input('Enter retrieval date (DD/MM/YYYY HH:mm): ')
                 if retrievalString != 'q':
                     retrievalDate = datetime.strptime(retrievalString, '%d/%m/%Y %H:%M')
                     retrievalDate = retrievalDate.timestamp()

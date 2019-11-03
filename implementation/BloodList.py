@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 from JsonWriter import JsonWriter
+from BeautifulPrint import BeautifulPrint
+from collections import Counter
 
 class BloodList(ABC):
     list = []
@@ -61,3 +63,18 @@ class BloodList(ABC):
         target = self.getBlood(id)
         self.removeBlood(id)
         return target
+
+    def checkStorage(self):
+
+        # All valid blood types
+        keys = ['O', 'O+', '0-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
+
+        # Using 3 as a dummy value, replace with real value later
+        for key in keys:
+            if self.list.count(key) < 3:
+                BeautifulPrint.error('Blood Type: ' + key + ' currently has ' + str(self.list.count(key)) +
+                                     ' Blood in stock. Please find more stock!')
+
+
+
+
