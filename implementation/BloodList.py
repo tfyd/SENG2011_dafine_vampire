@@ -1,8 +1,5 @@
 from abc import ABC, abstractmethod
 from JsonWriter import JsonWriter
-from BeautifulPrint import BeautifulPrint
-from collections import Counter
-
 
 class BloodList(ABC):
     list = []

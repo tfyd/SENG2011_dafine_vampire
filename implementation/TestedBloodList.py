@@ -27,7 +27,6 @@ class TestedBloodList(BloodList):
         # All valid blood types
         keysDict = {'O': 0, 'O+': 0, '0-': 0, 'A+': 0, 'A-': 0, 'B+': 0, 'B-': 0, 'AB+': 0, 'AB-': 0}
 
-        countedDict = {}
         # Using 3 as a dummy value, replace with real value later
         for key in keysDict.keys():
             for blood in self.list:
