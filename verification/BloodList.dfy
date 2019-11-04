@@ -3,7 +3,7 @@ class {:autocontracts} BloodList
   var list: array<int>;
   var upto: int;
 
-  ghost var bloodSet: set<int>;
+  // ghost var bloodSet: set<int>;
 
   predicate Valid()
   reads this;
@@ -32,7 +32,7 @@ class {:autocontracts} BloodList
   {
     // assert forall x :: x in bloodSet ==> exists t :: 0 <= t <= upto && list[t] == x;
    
-    bloodSet := bloodSet + {blood};
+    // bloodSet := bloodSet + {blood};
     if upto == list.Length - 1
     {
       var newlist := new int[2*list.Length];
