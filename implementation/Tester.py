@@ -32,7 +32,7 @@ class Tester(Role):
 
     def test(self, id):
         toBeTested = UntestedBloodList().extractBlood(id)
-        validBlood =  ['O', 'O+', '0-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
+        validBlood =  ['O', 'O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
         checkedBloodType = None
         while True:
             testPassed = input('Is the test passed (Y/N): ')
