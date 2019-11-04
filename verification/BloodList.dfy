@@ -9,7 +9,7 @@ class {:autocontracts} BloodList
   reads this;
   {
     list != null && 0 <= upto < list.Length
-    //&& forall x :: x in bloodSet ==> exists t :: 0 <= t <= upto && list[t] == x
+    // && forall x :: x in bloodSet ==> exists t :: 0 <= t <= upto && list[t] == x
   }
 
   constructor(size: int)
@@ -20,7 +20,7 @@ class {:autocontracts} BloodList
   {
     list := new int[size];
     upto := 0;
-    bloodSet := {};
+  //  bloodSet := {};
   }
 
   method addBlood(blood: int)
@@ -28,7 +28,7 @@ class {:autocontracts} BloodList
   ensures list[upto] == blood;
   ensures upto == old(upto) + 1;
   ensures old(list[0..old(upto)]) == list[0..old(upto)];
-  ensures bloodSet == old(bloodSet) + {blood};
+  // ensures bloodSet == old(bloodSet) + {blood};
   {
     // assert forall x :: x in bloodSet ==> exists t :: 0 <= t <= upto && list[t] == x;
    
@@ -53,10 +53,10 @@ class {:autocontracts} BloodList
   method removeBlood(blood: int)
   // requires Valid(); ensures Valid();
   requires upto > 0;
-  requires blood in bloodSet;
+  // requires blood in bloodSet;
   requires exists t :: 0 <= t <= upto && list[t] == blood;
   ensures upto == old(upto) - 1;
-  ensures bloodSet == old(bloodSet) - {blood};
+  // ensures bloodSet == old(bloodSet) - {blood};
   ensures exists t :: 0 <= t <= old(upto) && old(list[t]) == blood
                       && forall p :: 0 <= p < t ==> list[p] == old(list[p])
                       && forall q :: t < q <= old(upto) ==> list[q-1] == old(list[q]);
@@ -80,7 +80,7 @@ class {:autocontracts} BloodList
             list[j - 1] := list[j];
           }
 
-          bloodSet := bloodSet - {blood};
+          // bloodSet := bloodSet - {blood};
           break;
       }
       i := i + 1;
