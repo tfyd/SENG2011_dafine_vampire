@@ -3,6 +3,8 @@ from MenuLevel import MenuLevel
 from UntestedBloodList import UntestedBloodList
 from TestedBloodList import TestedBloodList
 from TestedBlood import TestedBlood
+from DisposedBlood import DisposedBlood
+from DisposedBloodList import DisposedBloodList
 from Role import Role
 from datetime import datetime
 
@@ -30,8 +32,16 @@ class Tester(Role):
 
     def test(self, id):
         toBeTested = UntestedBloodList().extractBlood(id)
-        validBlood =  ['O', 'O+', '0-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
+        validBlood =  ['O', 'O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
         checkedBloodType = None
+        while True:
+            testPassed = input('Is the test passed (Y/N): ')
+            if (testPassed == 'Y'):
+                break
+            if (testPassed == 'N'):
+                DisposedBloodList().addBlood(DisposedBlood(toBeTested.id))
+                BeautifulPrint.warning('Blood is pending to be disposed.')
+                return
 
         while checkedBloodType is None:
             BeautifulPrint.warning('Valid Blood Types are: O, O+, O-, A+, A-, B+, B-, AB+, AB-')
