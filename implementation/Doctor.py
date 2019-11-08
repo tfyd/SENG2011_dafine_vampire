@@ -4,6 +4,7 @@ from TestedBloodList import TestedBloodList
 from datetime import datetime
 from Dispose import Dispose
 from ReservedBloodList import ReservedBloodList
+import os
 
 class Doctor():
 
@@ -46,6 +47,7 @@ class Doctor():
         reservedBlood = TestedBloodList().extractBlood(id)
         ReservedBloodList().addBlood(reservedBlood)
         input('Press enter to go back...')
+        os.system('clear') # clear the screen  
 
     def viewBlood(self):
         Dispose().dispose()
@@ -66,14 +68,23 @@ class Doctor():
                 end='\n')
 
         input('Press enter to go back...')
+        os.system('clear') # clear the screen  
 
     def viewBloodType(self):
-        bloodtype = input('Please enter a type of blood : ')
-
+        validBlood =  ['O', 'O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
+        checkedBloodType = None
+        while checkedBloodType is None:
+            BeautifulPrint.warning('Valid Blood Types are: O, O+, O-, A+, A-, B+, B-, AB+, AB-')
+            bloodType = input('Enter blood type: ')
+            os.system('clear')
+            if bloodType in validBlood:
+                checkedBloodType = bloodType
+            else:
+                BeautifulPrint.error('Please enter a valid blood type.')
         testedList = TestedBloodList()
-
+        counter = 0
         for blood in testedList.list:
-            if blood.type == bloodtype:
+            if blood.type == checkedBloodType:
                 expirationString = datetime.fromtimestamp(blood.expiration).strftime('%d-%m-%Y %H:%M')
                 # print('blood retrieval = ', blood.retrievalDate)
                 retrievalString = datetime.fromtimestamp(blood.retrievalDate).strftime('%d-%m-%Y %H:%M')
@@ -82,8 +93,13 @@ class Doctor():
                         blood.type) + ' | Retrieval Date: ' + retrievalString + ' | Expiration Date: ' + expirationString,
 
                     end='\n')
+                counter+=1
+
+        if counter == 0:
+            BeautifulPrint.warning('  There\'s no ' + str(checkedBloodType) + ' type blood')
 
         input('Press enter to go back...')
+        os.system('clear') # clear the screen  
 
     def viewReservedList(self):
         Dispose().dispose()
@@ -103,4 +119,6 @@ class Doctor():
 
                 end='\n')
 
+
         input('Press enter to go back...')
+        os.system('clear') # clear the screen  

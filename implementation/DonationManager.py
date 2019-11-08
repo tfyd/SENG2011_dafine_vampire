@@ -5,6 +5,7 @@ from UntestedBlood import UntestedBlood
 from UntestedBloodList import UntestedBloodList
 import time
 from datetime import datetime 
+import os
 
 class DonationManager(Role):
 
@@ -25,6 +26,7 @@ class DonationManager(Role):
         while(1):
             try:
                 retrievalString = input('Enter retrieval date (DD/MM/YYYY HH:mm): ')
+                os.system('clear') # clear the screen  
                 if retrievalString != 'q':
                     retrievalDate = datetime.strptime(retrievalString, '%d/%m/%Y %H:%M')
                     retrievalDate = retrievalDate.timestamp()
@@ -32,11 +34,17 @@ class DonationManager(Role):
                     UntestedBloodList().addBlood(newBlood)
                     BeautifulPrint.success('Insert ' + str(newBlood) + ' succeeded. \nPlease insert the blood to the storehouse')
                     input('Press enter to go back...')
+                    os.system('clear') # clear the screen 
                 else:
                     BeautifulPrint.error("Insertion cancelled")
+                    input('Press enter to go back...')
+                    os.system('clear') # clear the screen  
                 break
             except ValueError:
                 BeautifulPrint.error("Please insert the date in [DD/MM/YYYY HH:mm] format")
+                BeautifulPrint.error("Insert 'q' to go back")
+            except OSError:
+                BeautifulPrint.error("Please not to insert a date in the past")
                 BeautifulPrint.error("Insert 'q' to go back")
 
     def viewBlood(self):
@@ -49,3 +57,4 @@ class DonationManager(Role):
         BeautifulPrint.infoPurple(str(list), end='')
 
         input('Press enter to go back...')
+        os.system('clear') # clear the screen  

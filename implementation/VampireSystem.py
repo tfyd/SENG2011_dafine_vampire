@@ -18,7 +18,8 @@ class VampireSystem():
         self.interfaceRootLevel = MenuLevel(
             welcomeMessage='Currently we have these roles', 
             backable=False,
-            inputPrompt='Please specify your role: '
+            inputPrompt='Please specify your role: ',
+            startPage = True
         )
         self._bindRoutes()
         self.interfaceRootLevel.addItem(MenuLevel(
