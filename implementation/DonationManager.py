@@ -43,6 +43,9 @@ class DonationManager(Role):
             except ValueError:
                 BeautifulPrint.error("Please insert the date in [DD/MM/YYYY HH:mm] format")
                 BeautifulPrint.error("Insert 'q' to go back")
+            except OSError:
+                BeautifulPrint.error("Please not to insert a date in the past")
+                BeautifulPrint.error("Insert 'q' to go back")
 
     def viewBlood(self):
         list = UntestedBloodList()

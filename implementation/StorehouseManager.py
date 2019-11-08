@@ -34,6 +34,9 @@ class StorehouseManager(Role):
     def dispose(self, id):
         toBeDisposed = DisposedBloodList().extractBlood(id)
         BeautifulPrint.success('Blood sample ' + str(toBeDisposed.id) + ' successed. \nPlease remove the blood to the storehouse')
+        
+        input('Press enter to go back...')
+        os.system('clear') # clear the screen  
 
     def viewBlood(self):
         Dispose().dispose()
