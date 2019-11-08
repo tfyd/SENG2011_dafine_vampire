@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Move testing directory
-BASEDIR=$(dirname "$0"
+BASEDIR=$(dirname "$0")
 cd $BASEDIR/../
 
 # Test
