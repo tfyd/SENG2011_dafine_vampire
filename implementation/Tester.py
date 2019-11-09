@@ -7,7 +7,7 @@ from DisposedBlood import DisposedBlood
 from DisposedBloodList import DisposedBloodList
 from Role import Role
 from datetime import datetime
-from screanCleaner import screanCleaner
+from ScreanCleaner import ScreanCleaner
 
 class Tester(Role):
     def select(self):
@@ -37,7 +37,7 @@ class Tester(Role):
         checkedBloodType = None
         while True:
             testPassed = input('Is the test passed (Y/N): ')
-            screanCleaner.clear()
+            ScreanCleaner.clear()
             if (testPassed == 'Y' or testPassed == 'y'):
                 break
             elif (testPassed == 'N' or testPassed == 'n'):
@@ -50,7 +50,7 @@ class Tester(Role):
         while checkedBloodType is None:
             BeautifulPrint.warning('Valid Blood Types are: O, O+, O-, A+, A-, B+, B-, AB+, AB-')
             bloodType = input('Enter blood type: ')
-            screanCleaner.clear()
+            ScreanCleaner.clear()
             if bloodType in validBlood:
                 checkedBloodType = bloodType  
             else:
@@ -65,14 +65,14 @@ class Tester(Role):
                 expiration = expiration.timestamp()
             except:
                 expiration = None
-                screanCleaner.clear()
+                ScreanCleaner.clear()
                 BeautifulPrint.error("Please insert the date in [DD/MM/YYYY HH:mm] format")
 
         TestedBloodList().addBlood(TestedBlood(toBeTested.id, toBeTested.retrievalDate, checkedBloodType, expiration))
 
         BeautifulPrint.success('Blood sample {} has been tested.'.format(str(toBeTested.id)))
         input('Press enter to continue')
-        screanCleaner.clear() # clear the screen  
+        ScreanCleaner.clear() # clear the screen  
 
 
     def showMenu(self):
