@@ -58,9 +58,9 @@ class TestedBloodList(BloodList):
                     keysDict[key] += 1
 
         for key in keysDict.keys():
-                BeautifulPrint.warning('  Blood Type: ' + key + ' has ', end='')
-                BeautifulPrint.bold(str(keysDict[key]), end='')                       
-                BeautifulPrint.warning(' Blood stock remaining')
+            BeautifulPrint.warning('  Blood Type: ' + key + ' has ', end='')
+            BeautifulPrint.bold(str(keysDict[key]), end='')                       
+            BeautifulPrint.warning(' Blood stock remaining')
 
     def testedBloodNum(self):
         return len(self.list)
