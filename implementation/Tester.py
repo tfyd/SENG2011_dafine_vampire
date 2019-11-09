@@ -3,8 +3,11 @@ from MenuLevel import MenuLevel
 from UntestedBloodList import UntestedBloodList
 from TestedBloodList import TestedBloodList
 from TestedBlood import TestedBlood
+from DisposedBlood import DisposedBlood
+from DisposedBloodList import DisposedBloodList
 from Role import Role
 from datetime import datetime
+import os
 
 class Tester(Role):
     def select(self):
@@ -30,20 +33,46 @@ class Tester(Role):
 
     def test(self, id):
         toBeTested = UntestedBloodList().extractBlood(id)
-        bloodType = input('Enter blood type: ')
+        validBlood =  ['O', 'O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
+        checkedBloodType = None
+        while True:
+            testPassed = input('Is the test passed (Y/N): ')
+            os.system('clear')
+            if (testPassed == 'Y' or testPassed == 'y'):
+                break
+            elif (testPassed == 'N' or testPassed == 'n'):
+                DisposedBloodList().addBlood(DisposedBlood(toBeTested.id))
+                BeautifulPrint.warning('Blood is pending to be disposed.')
+                return
+            else :
+                BeautifulPrint.warning('Please enter Y or N')
+
+        while checkedBloodType is None:
+            BeautifulPrint.warning('Valid Blood Types are: O, O+, O-, A+, A-, B+, B-, AB+, AB-')
+            bloodType = input('Enter blood type: ')
+            os.system('clear')
+            if bloodType in validBlood:
+                checkedBloodType = bloodType  
+            else:
+                BeautifulPrint.error('Please enter a valid blood type.')
+
         expiration = None
         while expiration is None:        
             try:
                 expirationString = input('Enter expiration date (DD/MM/YYYY HH:mm): ')
+                os.system('clear')
                 expiration = datetime.strptime(expirationString, '%d/%m/%Y %H:%M')
                 expiration = expiration.timestamp()
             except:
                 expiration = None
+                os.system('clear')
+                BeautifulPrint.error("Please insert the date in [DD/MM/YYYY HH:mm] format")
 
-        TestedBloodList().addBlood(TestedBlood(toBeTested.id, toBeTested.retrievalDate, bloodType, expiration))
+        TestedBloodList().addBlood(TestedBlood(toBeTested.id, toBeTested.retrievalDate, checkedBloodType, expiration))
 
         BeautifulPrint.success('Blood sample {} has been tested.'.format(str(toBeTested.id)))
         input('Press enter to continue')
+        os.system('clear') # clear the screen  
 
 
     def showMenu(self):

@@ -1,4 +1,5 @@
 from BeautifulPrint import BeautifulPrint
+import os
 
 # An abstracted class to print levelised menu.
 # Examples & usages are at the end of this file.
@@ -9,14 +10,16 @@ class MenuLevel():
     _title = ''
     _backable = True
     _onSelect = None
+    _startPage= False
 
-    def __init__(self, id='', title='', welcomeMessage=None, backable=True, onSelect=None, inputPrompt=None):
+    def __init__(self, id='', title='', welcomeMessage=None, backable=True, onSelect=None, inputPrompt=None, startPage=False):
         self._id = id
         self._title = title
         self._subLevels = []
         self._welcomeMessage = welcomeMessage
         self._backable = backable
         self._onSelect = onSelect
+        self._startPage = startPage
         self._inputPrompt = 'Please choose one item: '
         if inputPrompt:
             self._inputPrompt = inputPrompt
@@ -29,13 +32,14 @@ class MenuLevel():
     
     def run(self):
         while True:
-            print('') # give some space here
+            if self._startPage:
+                os.system('clear') # clear the screen  
             if self._welcomeMessage:
                 BeautifulPrint.infoBlue(self._welcomeMessage)
             BeautifulPrint.infoPurple(self._showItems(), end='')
             BeautifulPrint.infoBlue(self._inputPrompt, end='')
             userInput = input()
-
+            os.system('clear') # clear the screen           
             # A little bit hackey here...
             if (self._backable) and (userInput == 'b'): 
                 return
@@ -95,11 +99,13 @@ class MenuLevel():
 
     @staticmethod
     def quitSystem():
+        os.system('clear')
         print('You are leaving the system. Bye!')
         exit()
 
 if __name__ == "__main__":
     def showLeaf():
+        os.system('clear')
         print('You are running a leaf function here')
         print('use input() function to block the program')
         input('Press enter to continue/go back...')
