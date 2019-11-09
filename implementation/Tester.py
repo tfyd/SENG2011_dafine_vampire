@@ -60,7 +60,7 @@ class Tester(Role):
         while expiration is None:        
             try:
                 expirationString = input('Enter expiration date (DD/MM/YYYY HH:mm): ')
-                screanCleaner.clear()
+                ScreanCleaner.clear()
                 expiration = datetime.strptime(expirationString, '%d/%m/%Y %H:%M')
                 expiration = expiration.timestamp()
             except:
