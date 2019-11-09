@@ -5,7 +5,7 @@ from TestedBloodList import TestedBloodList
 from Role import Role
 from Dispose import Dispose
 from datetime import datetime
-import os
+from screanCleaner import screanCleaner
 
 class StorehouseManager(Role):
     
@@ -36,7 +36,7 @@ class StorehouseManager(Role):
         BeautifulPrint.success('Blood sample ' + str(toBeDisposed.id) + ' successed. \nPlease remove the blood from the storehouse')
         
         input('Press enter to go back...')
-        os.system('clear') # clear the screen  
+        screanCleaner.clear()  
 
     def viewBlood(self):
         Dispose().dispose()
@@ -56,7 +56,7 @@ class StorehouseManager(Role):
                 end='\n')
 
         input('Press enter to go back...')
-        os.system('clear') # clear the screen  
+        screanCleaner.clear()  
 
     def disposeAll(self):
         Dispose().dispose()
@@ -76,12 +76,12 @@ class StorehouseManager(Role):
                         end='\n')
                 BeautifulPrint.warning('Please collect all above blood from storehouse before delete them from system', end='\n')
                 answer = input('Are you sure you want to delete them all (Y/N): ')
-                os.system('clear') # clear the screen
+                screanCleaner.clear()
                 if (answer == 'Y' or answer == 'y') :
                     for eId in expiredId:
                         DisposedBloodList().extractBlood(eId)
                     input('All expired blood is removed. Press enter to go back...')
-                    os.system('clear') # clear the screen
+                    screanCleaner.clear()
                 elif (answer == 'N' or answer == 'n') :
                     break
                 else :
@@ -89,7 +89,7 @@ class StorehouseManager(Role):
         else:
             BeautifulPrint.warning('We currently don\'t have any expired blood required to be removed', end='\n')
             input('Press enter to go back...')
-            os.system('clear') # clear the screen  
+            screanCleaner.clear()
 
 
     def showMenu(self):
