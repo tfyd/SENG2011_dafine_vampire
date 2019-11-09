@@ -1,6 +1,8 @@
+include "Blood.dfy"
+
 class {:autocontracts} BloodList
 {
-  var list: array<int>;
+  var list: array<Blood>;
   var upto: int;
 
   predicate Valid()
@@ -13,11 +15,11 @@ class {:autocontracts} BloodList
   requires size > 0;
   ensures fresh(list);
   {
-    list := new int[size];
+    list := new Blood[size];
     upto := 0;
   }
 
-  method addBlood(blood: int)
+  method addBlood(blood: Blood)
   ensures list[upto] == blood;
   ensures upto == old(upto) + 1;
   ensures old(list[0..old(upto)]) == list[0..old(upto)];
@@ -25,7 +27,7 @@ class {:autocontracts} BloodList
    
     if upto == list.Length - 1
     {
-      var newlist := new int[2*list.Length];
+      var newlist := new Blood[2*list.Length];
       forall(i | 0 <= i < list.Length)
       { 
         newlist[i] := list[i];
@@ -38,7 +40,7 @@ class {:autocontracts} BloodList
   }
 
 
-  method removeBlood(blood: int)
+  method removeBlood(blood: Blood)
   requires upto > 0;
   requires exists t :: 0 <= t <= upto && list[t] == blood;
   ensures upto == old(upto) - 1;
