@@ -1,8 +1,5 @@
 from abc import ABC, abstractmethod
 from JsonWriter import JsonWriter
-from UntestedBlood import UntestedBlood
-from TestedBlood import TestedBlood
-from DisposedBlood import DisposedBlood
 
 class BloodList(ABC):
     list = []
