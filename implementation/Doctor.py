@@ -28,6 +28,22 @@ class Doctor():
 
         newLevel.run()
 
+    def selectReserve(self):
+        removeReserve = lambda id: lambda: self.removeReservation(id)
+        reservedList = ReservedBloodList()
+
+        newLevel = MenuLevel(
+            welcomeMessage = 'We have these blood reserved in the storehouse',
+            inputPrompt='Select the blood reservation you want to cancel'
+
+        )
+        i = 1
+        for reserved in reservedList.list:
+            newLevel.addItem(MenuLevel(
+            id = str(i),
+            title = 'Blood ID: {}'.format(str(reserved.id)),
+            onSelect=removeReserve(reserved.id)
+        ))
     def showMenu(self):
         thisLevel = MenuLevel(
             welcomeMessage=
@@ -41,13 +57,6 @@ class Doctor():
         thisLevel.addItem(MenuLevel('4', 'View Reserve Blood List', onSelect=self.viewReservedList))
         thisLevel.select()
 
-    def reserveBlood(self, id):
-        BeautifulPrint.infoPurple("Reserve Functionality Pending...")
-
-        reservedBlood = TestedBloodList().extractBlood(id)
-        ReservedBloodList().addBlood(reservedBlood)
-        input('Press enter to go back...')
-        ScreanCleaner.clear()
 
     def viewBlood(self):
         Dispose().dispose()
@@ -122,3 +131,22 @@ class Doctor():
 
         input('Press enter to go back...')
         ScreanCleaner.clear()
+
+    def reserveBlood(self, id):
+        reservedBlood = TestedBloodList().extractBlood(id)
+        ReservedBloodList().addBlood(reservedBlood)
+        input('Press enter to go back...')
+        ScreanCleaner.clear()
+
+    def removeReservation(self, id):
+
+        bloodToRemove = ReservedBloodList.extractBlood(id)
+        BeautifulPrint.error('Blood reservation has been removed.')
+        TestedBloodList.addBlood(bloodToRemove)
+        BeautifulPrint.success('Blood has been added back to Tested List')
+        input('Press enter to go back...')
+        ScreanCleaner.clear()
+
+
+
+
