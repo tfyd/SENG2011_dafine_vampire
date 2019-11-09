@@ -1,9 +1,13 @@
 from TestedBloodList import TestedBloodList
 from DisposedBlood import DisposedBlood
 from DisposedBloodList import DisposedBloodList
+from EmailSender import EmailSender
 import time
 
 class Dispose():
+
+    haveSentEmail = []
+
     def checkExp(self, blood):
         if blood.expiration < time.time():
             return True
@@ -18,6 +22,13 @@ class Dispose():
                 DisposedBloodList().addBlood(DisposedBlood(blood.id))
                 tested.extractBlood(blood.id)
                 disposed.append(str(blood.id))
+
+        insufficientBloodList = tested.insufficentBloodList()
+
+        if not all(elem in self.haveSentEmail  for elem in insufficientBloodList) :
+            sender = EmailSender()
+            sender.detailedEmail(insufficientBloodList)
+        self.haveSentEmail = insufficientBloodList
 
         disposedString = "\n".join(disposed)
         if len(disposed) != 0:
