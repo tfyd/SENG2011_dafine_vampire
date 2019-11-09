@@ -42,6 +42,7 @@ class StorehouseManager(Role):
     def viewBlood(self):
         Dispose().dispose()
         testedList = TestedBloodList()
+        testedList.sortByExpiryDate()
         testedList.checkStorage()
         print('We currently have ', end='')
         BeautifulPrint.bold(str(testedList.count), end='')
@@ -52,8 +53,8 @@ class StorehouseManager(Role):
             retrievalString = datetime.fromtimestamp(blood.retrievalDate).strftime('%d-%m-%Y %H:%M')
             BeautifulPrint.infoPurple(
                 'ID:' + str(blood.id) + ' |  Blood Type:' + str(
-                    blood.type) + ' |  Expiration Date: ' + expirationString + ' | Retrieval Date: ' +
-                retrievalString,
+                    blood.type) +  ' | Retrieval Date: ' +
+                retrievalString + ' |  Expiration Date: ' + expirationString,
                 end='\n')
 
         input('Press enter to go back...')

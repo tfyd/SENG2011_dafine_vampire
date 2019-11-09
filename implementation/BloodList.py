@@ -61,3 +61,5 @@ class BloodList(ABC):
         target = self.getBlood(id)
         self.removeBlood(id)
         return target
+
+
