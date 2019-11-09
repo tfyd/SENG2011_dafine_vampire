@@ -1,5 +1,3 @@
-
-
 // Untested | Tested | Disposed
 datatype State = UT | TD | DP
 
@@ -37,11 +35,26 @@ class {:autocontracts} Blood {
         expiration := -1;
     }
 
-    method testBlood(b: Blood) {
-
+    method testSucc (exdate: int, tp: BloodType) 
+    requires exdate > 0 && state == UT && tp != UD
+    requires exdate > retrieval
+    ensures state == TD && expiration == exdate && bloodType == tp 
+    ensures retrieval == old(retrieval) && id == old(id)
+    {
+        expiration := exdate;
+        bloodType := tp;  
+        state := TD;   
     }
 
-    method disposeBlood(b: Blood) {
-
+    // if failed test just dispose I think?
+    method disposeBlood() 
+    requires state == UT || state == TD
+    ensures state == DP && bloodType == UD && expiration == -1 && retrieval == -1
+    ensures id == old(id)
+    {
+        state := DP;
+        bloodType := UD;
+        expiration := -1;
+        retrieval := -1;
     }
 }
