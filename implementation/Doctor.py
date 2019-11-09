@@ -4,7 +4,7 @@ from TestedBloodList import TestedBloodList
 from datetime import datetime
 from Dispose import Dispose
 from ReservedBloodList import ReservedBloodList
-import os
+from screanCleaner import screanCleaner
 
 class Doctor():
 
@@ -47,7 +47,7 @@ class Doctor():
         reservedBlood = TestedBloodList().extractBlood(id)
         ReservedBloodList().addBlood(reservedBlood)
         input('Press enter to go back...')
-        os.system('clear') # clear the screen  
+        screanCleaner.clear()
 
     def viewBlood(self):
         Dispose().dispose()
@@ -68,7 +68,7 @@ class Doctor():
                 end='\n')
 
         input('Press enter to go back...')
-        os.system('clear') # clear the screen  
+        screanCleaner.clear()  
 
     def viewBloodType(self):
         validBlood =  ['O', 'O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
@@ -76,7 +76,7 @@ class Doctor():
         while checkedBloodType is None:
             BeautifulPrint.warning('Valid Blood Types are: O, O+, O-, A+, A-, B+, B-, AB+, AB-')
             bloodType = input('Enter blood type: ')
-            os.system('clear')
+            screanCleaner.clear()
             if bloodType in validBlood:
                 checkedBloodType = bloodType
             else:
@@ -99,7 +99,7 @@ class Doctor():
             BeautifulPrint.warning('  There\'s no ' + str(checkedBloodType) + ' type blood')
 
         input('Press enter to go back...')
-        os.system('clear') # clear the screen  
+        screanCleaner.clear()
 
     def viewReservedList(self):
         Dispose().dispose()
@@ -121,4 +121,4 @@ class Doctor():
 
 
         input('Press enter to go back...')
-        os.system('clear') # clear the screen  
+        screanCleaner.clear()
