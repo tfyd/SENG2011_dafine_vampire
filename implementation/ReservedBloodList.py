@@ -20,3 +20,16 @@ class ReservedBloodList(BloodList):
                 type=blood['type'],
                 expiration=blood['expiration']
             ))
+
+    def sortByExpiryDate(self):
+
+        for i in range(1, len(self.list)):
+
+            key = self.list[i]
+            j = i - 1
+            while j >= 0 and key.expiration < self.list[j].expiration:
+                self.list[j + 1] = self.list[j]
+                j -= 1
+            self.list[j + 1] = key
+
+
