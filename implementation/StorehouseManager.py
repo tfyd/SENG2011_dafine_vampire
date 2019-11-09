@@ -6,6 +6,7 @@ from Role import Role
 from Dispose import Dispose
 from datetime import datetime
 from ScreanCleaner import ScreanCleaner
+import time
 
 class StorehouseManager(Role):
     
@@ -59,6 +60,42 @@ class StorehouseManager(Role):
         input('Press enter to go back...')
         ScreanCleaner.clear()  
 
+    def viewBloodStockCurrent(self):
+        Dispose().dispose()
+        testedList = TestedBloodList()
+        testedList.sortByExpiryDate()
+        testedList.numOfStorageCurrent()
+        input('Press enter to go back...')
+        ScreanCleaner.clear()
+
+    def viewBloodStockFuture(self):
+        Dispose().dispose()
+        testedList = TestedBloodList()
+        testedList.sortByExpiryDate()
+        while(True):
+            try:
+                timeString  = input('Enter date in future (DD/MM/YYYY HH:mm): ')
+                ScreanCleaner.clear() # clear the screen  
+                if timeString != 'q':
+                    futureDate = datetime.strptime(timeString, '%d/%m/%Y %H:%M')
+                    if futureDate.timestamp() <= time.time() :
+                        BeautifulPrint.infoBlue('You have entered a date at past, return current stack level instead')
+                        testedList.numOfStorageCurrent()
+                    else :
+                        BeautifulPrint.infoBlue('The estimated stock level at ' + timeString + ' is:')
+                        testedList.numOfStorageFuture(futureDate.timestamp())
+                else:
+                    BeautifulPrint.error("Insertion cancelled")
+                input('Press enter to go back...')
+                ScreanCleaner.clear()# clear the screen  
+                break
+            except ValueError:
+                BeautifulPrint.error("Please insert the date in [DD/MM/YYYY HH:mm] format")
+                BeautifulPrint.error("Insert 'q' to go back")
+            except OSError:
+                BeautifulPrint.error("Please not to insert a date in the past")
+                BeautifulPrint.error("Insert 'q' to go back")  
+
     def disposeAll(self):
         Dispose().dispose()
         disposedList = DisposedBloodList()
@@ -99,7 +136,9 @@ class StorehouseManager(Role):
             inputPrompt='What do you want to do? '
         )
         thisLevel.addItem(MenuLevel('1', 'Dispose Blood', onSelect=self.select))
-        thisLevel.addItem(MenuLevel('2', 'View Blood', onSelect = self.viewBlood))
+        thisLevel.addItem(MenuLevel('2', 'View All Blood', onSelect = self.viewBlood))
         thisLevel.addItem(MenuLevel('3', 'Dispose All Blood', onSelect = self.disposeAll))
+        thisLevel.addItem(MenuLevel('4', 'View Current Blood Stock', onSelect = self.viewBloodStockCurrent))
+        thisLevel.addItem(MenuLevel('5', 'View Future Blood Stock', onSelect = self.viewBloodStockFuture))
 
         thisLevel.select()

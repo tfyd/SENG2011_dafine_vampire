@@ -28,7 +28,7 @@ class Doctor():
                 onSelect=callReserve(reserved.id)
             ))
             i += 1
-            newLevel.run()
+        newLevel.run()
 
     def select(self):
         callReserve = lambda id: lambda: self.reserveBlood(id)
