@@ -5,4 +5,4 @@ class DisposedBlood(Blood):
         self.expiration = e
 
     def toDictionary(self):
-        return {'id': self.id}
+        return {'id': self.id, 'expiration': self.expiration}

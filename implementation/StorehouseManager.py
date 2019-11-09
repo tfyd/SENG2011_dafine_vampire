@@ -5,7 +5,7 @@ from TestedBloodList import TestedBloodList
 from Role import Role
 from Dispose import Dispose
 from datetime import datetime
-from screanCleaner import screanCleaner
+from ScreanCleaner import ScreanCleaner
 
 class StorehouseManager(Role):
     
@@ -21,9 +21,10 @@ class StorehouseManager(Role):
 
         i = 1
         for disposed in disposedList.list:
+            retrievalString = datetime.fromtimestamp(disposed.expiration).strftime('%d-%m-%Y %H:%M')
             newLevel.addItem(MenuLevel(
                 id=str(i),
-                title='Disposed sample {}'.format(str(disposed.id)),
+                title='Disposed sample {} | Expiration Date: {}'.format(str(disposed.id), retrievalString),
                 onSelect=callDispose(disposed.id) 
             ))
             i += 1
@@ -36,7 +37,7 @@ class StorehouseManager(Role):
         BeautifulPrint.success('Blood sample ' + str(toBeDisposed.id) + ' successed. \nPlease remove the blood from the storehouse')
         
         input('Press enter to go back...')
-        screanCleaner.clear()  
+        ScreanCleaner.clear() # clear the screen  
 
     def viewBlood(self):
         Dispose().dispose()
@@ -56,7 +57,7 @@ class StorehouseManager(Role):
                 end='\n')
 
         input('Press enter to go back...')
-        screanCleaner.clear()  
+        ScreanCleaner.clear()  
 
     def disposeAll(self):
         Dispose().dispose()
@@ -76,12 +77,13 @@ class StorehouseManager(Role):
                         end='\n')
                 BeautifulPrint.warning('Please collect all above blood from storehouse before delete them from system', end='\n')
                 answer = input('Are you sure you want to delete them all (Y/N): ')
-                screanCleaner.clear()
+                ScreanCleaner.clear()
                 if (answer == 'Y' or answer == 'y') :
                     for eId in expiredId:
                         DisposedBloodList().extractBlood(eId)
                     input('All expired blood is removed. Press enter to go back...')
-                    screanCleaner.clear()
+                    ScreanCleaner.clear()
+                    break
                 elif (answer == 'N' or answer == 'n') :
                     break
                 else :
@@ -89,7 +91,7 @@ class StorehouseManager(Role):
         else:
             BeautifulPrint.warning('We currently don\'t have any expired blood required to be removed', end='\n')
             input('Press enter to go back...')
-            screanCleaner.clear()
+            ScreanCleaner.clear()
 
 
     def showMenu(self):
