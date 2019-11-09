@@ -8,9 +8,32 @@ from ScreanCleaner import ScreanCleaner
 
 class Doctor():
 
+    def selectReserve(self):
+        reservedList = ReservedBloodList()
+        reservedList.sortByExpiryDate()
+        callReserve = lambda id: lambda: self.removeReservation(id)
+
+
+        newLevel = MenuLevel(
+            welcomeMessage = 'We have these blood reserved in the storehouse',
+            inputPrompt='Select the blood reservation you want to cancel: '
+
+        )
+        i = 1
+        for reserved in reservedList.list:
+            expirationString = datetime.fromtimestamp(reserved.expiration).strftime('%d-%m-%Y %H:%M')
+            newLevel.addItem(MenuLevel(
+                id = str(i),
+                title='Blood ID: {} | Expiration Date: {}'.format(str(reserved.id), expirationString),
+                onSelect=callReserve(reserved.id)
+            ))
+            i += 1
+            newLevel.run()
+
     def select(self):
         callReserve = lambda id: lambda: self.reserveBlood(id)
         testedList = TestedBloodList()
+        testedList.sortByExpiryDate()
 
         newLevel = MenuLevel(
             welcomeMessage='We have these tested blood in the storehouse:',
@@ -19,9 +42,10 @@ class Doctor():
 
         i = 1
         for tested in testedList.list:
+            expirationString = datetime.fromtimestamp(tested.expiration).strftime('%d-%m-%Y %H:%M')
             newLevel.addItem(MenuLevel(
                 id=str(i),
-                title='Blood ID: {}'.format(str(tested.id)),
+                title='Blood ID: {} | Expiration Date: {}'.format(str(tested.id), expirationString),
                 onSelect=callReserve(tested.id)
             ))
             i += 1
@@ -39,19 +63,20 @@ class Doctor():
         thisLevel.addItem(MenuLevel('2', 'Reserve Blood', onSelect=self.select))
         thisLevel.addItem(MenuLevel('3', 'Search By Blood Type', onSelect=self.viewBloodType))
         thisLevel.addItem(MenuLevel('4', 'View Reserve Blood List', onSelect=self.viewReservedList))
+        thisLevel.addItem(MenuLevel('5', 'Cancel Blood Reservation', onSelect=self.selectReserve))
         thisLevel.select()
 
     def reserveBlood(self, id):
-        BeautifulPrint.infoPurple("Reserve Functionality Pending...")
-
         reservedBlood = TestedBloodList().extractBlood(id)
         ReservedBloodList().addBlood(reservedBlood)
+        BeautifulPrint.success('Blood has been reserved.')
         input('Press enter to go back...')
         ScreanCleaner.clear()
 
     def viewBlood(self):
         Dispose().dispose()
         testedList = TestedBloodList()
+        testedList.sortByExpiryDate()
         testedList.checkStorage()
         print('We currently have ', end='')
         BeautifulPrint.bold(str(testedList.count), end='')
@@ -68,7 +93,7 @@ class Doctor():
                 end='\n')
 
         input('Press enter to go back...')
-        ScreanCleaner.clear()  
+        ScreanCleaner.clear()
 
     def viewBloodType(self):
         validBlood =  ['O', 'O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
@@ -119,6 +144,13 @@ class Doctor():
 
                 end='\n')
 
+        input('Press enter to go back...')
+        ScreanCleaner.clear()
 
+    def removeReservation(self, id):
+        bloodToRemove = ReservedBloodList().extractBlood(id)
+        BeautifulPrint.error('Blood reservation has been removed.')
+        TestedBloodList().addBlood(bloodToRemove)
+        BeautifulPrint.success('Blood has been added back to Tested List')
         input('Press enter to go back...')
         ScreanCleaner.clear()

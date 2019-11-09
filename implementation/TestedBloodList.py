@@ -40,3 +40,30 @@ class TestedBloodList(BloodList):
 
     def testedBloodNum(self):
         return len(self.list)
+
+    def sortByExpiryDate(self):
+
+        for i in range(1, len(self.list)):
+
+            # Insertion Shuffle Sort
+            key = self.list[i]
+            j = i-1
+            while j >= 0 and key.expiration < self.list[j].expiration:
+                self.list[j+1] = self.list[j]
+                j -= 1
+            self.list[j+1] = key
+
+
+        # Insertion Swap Sort
+        # for i in range(1, len(self.list)):
+        #
+        #     key = self.list[i]
+        #     j = i-1
+        #     while j >= 0 and key.expiration < self.list[j].expiration:
+        #         temp = self.list[j]
+        #         self.list[j+1] = self.list[j]
+        #         self.list[j] = temp
+        #
+        #         j -= 1
+        #     self.list[j+1] = key
+
