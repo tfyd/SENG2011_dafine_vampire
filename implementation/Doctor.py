@@ -3,9 +3,30 @@ from MenuLevel import MenuLevel
 from TestedBloodList import TestedBloodList
 from datetime import datetime
 from Dispose import Dispose
-
+from ReservedBloodList import ReservedBloodList
+import os
 
 class Doctor():
+
+    def select(self):
+        callReserve = lambda id: lambda: self.reserveBlood(id)
+        testedList = TestedBloodList()
+
+        newLevel = MenuLevel(
+            welcomeMessage='We have these tested blood in the storehouse:',
+            inputPrompt='Select one of the blood you want to reserve: '
+        )
+
+        i = 1
+        for tested in testedList.list:
+            newLevel.addItem(MenuLevel(
+                id=str(i),
+                title='Blood ID: {}'.format(str(tested.id)),
+                onSelect=callReserve(tested.id)
+            ))
+            i += 1
+
+        newLevel.run()
 
     def showMenu(self):
         thisLevel = MenuLevel(
@@ -15,18 +36,23 @@ class Doctor():
             inputPrompt='Please enter an action: '
         )
         thisLevel.addItem(MenuLevel('1', 'View Blood', onSelect=self.viewBlood))
-        thisLevel.addItem(MenuLevel('2', 'Reserve Blood', onSelect=self.reserveBlood))
+        thisLevel.addItem(MenuLevel('2', 'Reserve Blood', onSelect=self.select))
         thisLevel.addItem(MenuLevel('3', 'Search By Blood Type', onSelect=self.viewBloodType))
-
+        thisLevel.addItem(MenuLevel('4', 'View Reserve Blood List', onSelect=self.viewReservedList))
         thisLevel.select()
 
-    def reserveBlood(self):
+    def reserveBlood(self, id):
         BeautifulPrint.infoPurple("Reserve Functionality Pending...")
+
+        reservedBlood = TestedBloodList().extractBlood(id)
+        ReservedBloodList().addBlood(reservedBlood)
         input('Press enter to go back...')
+        os.system('clear') # clear the screen  
 
     def viewBlood(self):
         Dispose().dispose()
         testedList = TestedBloodList()
+        testedList.checkStorage()
         print('We currently have ', end='')
         BeautifulPrint.bold(str(testedList.count), end='')
         print(' available blood supplies.')
@@ -36,27 +62,63 @@ class Doctor():
             expirationString = datetime.fromtimestamp(blood.expiration).strftime('%d-%m-%Y %H:%M')
             retrievalString = datetime.fromtimestamp(blood.retrievalDate).strftime('%d-%m-%Y %H:%M')
             BeautifulPrint.infoPurple(
-                'ID:' + str(blood.id) + ' |  Blood Type:' + str(
-                    blood.type) + ' |  Expiration Date: ' + expirationString + ' | Retrieval Date: ' +
-                retrievalString,
+                'ID:' + str(blood.id) + ' | Blood Type:' + str(
+                    blood.type) + ' | Retrieval Date: ' + retrievalString + ' | Expiration Date: ' + expirationString,
+
                 end='\n')
 
         input('Press enter to go back...')
+        os.system('clear') # clear the screen  
 
     def viewBloodType(self):
-        bloodtype = input('Please enter a type of blood : ')
-
+        validBlood =  ['O', 'O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
+        checkedBloodType = None
+        while checkedBloodType is None:
+            BeautifulPrint.warning('Valid Blood Types are: O, O+, O-, A+, A-, B+, B-, AB+, AB-')
+            bloodType = input('Enter blood type: ')
+            os.system('clear')
+            if bloodType in validBlood:
+                checkedBloodType = bloodType
+            else:
+                BeautifulPrint.error('Please enter a valid blood type.')
         testedList = TestedBloodList()
-
+        counter = 0
         for blood in testedList.list:
-            if blood.type == bloodtype:
-                expirationString = datetime.utcfromtimestamp(blood.expiration).strftime('%d-%m-%Y %H:%M')
-                retrievalString = datetime.utcfromtimestamp(blood.retrievalDate).strftime('%d-%m-%Y %H:%M')
+            if blood.type == checkedBloodType:
+                expirationString = datetime.fromtimestamp(blood.expiration).strftime('%d-%m-%Y %H:%M')
+                # print('blood retrieval = ', blood.retrievalDate)
+                retrievalString = datetime.fromtimestamp(blood.retrievalDate).strftime('%d-%m-%Y %H:%M')
                 BeautifulPrint.infoPurple(
                     'ID:' + str(blood.id) + ' | Blood Type:' + str(
-                        blood.type) + ' | Expiration Date: ' + expirationString + ' | Retrieval Date: ' +
-                    retrievalString,
-                    retrievalString,
+                        blood.type) + ' | Retrieval Date: ' + retrievalString + ' | Expiration Date: ' + expirationString,
+
                     end='\n')
+                counter+=1
+
+        if counter == 0:
+            BeautifulPrint.warning('  There\'s no ' + str(checkedBloodType) + ' type blood')
 
         input('Press enter to go back...')
+        os.system('clear') # clear the screen  
+
+    def viewReservedList(self):
+        Dispose().dispose()
+        reservedList = ReservedBloodList()
+        # reservedList.checkStorage()
+        print('We currently have ', end='')
+        BeautifulPrint.bold(str(reservedList.count), end='')
+        print(' blood reserved.')
+
+        # TODO sort list by expiration date
+        for blood in reservedList.list:
+            expirationString = datetime.fromtimestamp(blood.expiration).strftime('%d-%m-%Y %H:%M')
+            retrievalString = datetime.fromtimestamp(blood.retrievalDate).strftime('%d-%m-%Y %H:%M')
+            BeautifulPrint.infoPurple(
+                'ID:' + str(blood.id) + ' | Blood Type:' + str(
+                    blood.type) + ' | Retrieval Date: ' + retrievalString + ' | Expiration Date: ' + expirationString,
+
+                end='\n')
+
+
+        input('Press enter to go back...')
+        os.system('clear') # clear the screen  
