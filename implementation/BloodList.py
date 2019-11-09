@@ -17,51 +17,9 @@ class BloodList(ABC):
         return len(self.list)
 
     @abstractmethod
-    def __init__(self,type):
+    def __init__(self):
         # Load list from json file, initialise correct object
         # Then store the object into the list
-        if type == 'Untested':
-            self.list = []
-            data = JsonWriter.parseJsonFromFile(
-                filename=self.jsonfile,
-                defaultValue=[]
-            )
-            for blood in data:
-                self.list.append(UntestedBlood(blood['id'], blood['retrievalDate']))
-        elif type == 'Tested':
-            self.list = []
-            data = JsonWriter.parseJsonFromFile(
-                filename=self.jsonfile,
-                defaultValue=[]
-            )
-            for blood in data:
-                self.list.append(TestedBlood(
-                    id=blood['id'],
-                    retrievalDate=blood['retrievalDate'],
-                    type=blood['type'],
-                    expiration=blood['expiration']
-                ))
-        elif type =='Reserved':
-            self.list = []
-            data = JsonWriter.parseJsonFromFile(
-                filename=self.jsonfile,
-                defaultValue=[]
-            )
-            for blood in data:
-                self.list.append(TestedBlood(
-                    id=blood['id'],
-                    retrievalDate=blood['retrievalDate'],
-                    type=blood['type'],
-                    expiration=blood['expiration']
-                ))
-        elif type == 'Disposed':
-            self.list = []
-            data = JsonWriter.parseJsonFromFile(
-                filename=self.jsonfile,
-                defaultValue=[]
-            )
-            for blood in data:
-                self.list.append(DisposedBlood(blood['id']))
         pass
 
     # convert the list to a list of dictionary then save to file
@@ -106,3 +64,5 @@ class BloodList(ABC):
         target = self.getBlood(id)
         self.removeBlood(id)
         return target
+
+
