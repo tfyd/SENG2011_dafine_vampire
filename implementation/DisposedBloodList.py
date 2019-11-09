@@ -13,6 +13,6 @@ class DisposedBloodList(BloodList):
             defaultValue = []
         )
         for blood in data:
-            self.list.append(DisposedBlood(blood['id'], blood['expiration']))
+            self.list.append(DisposedBlood(blood['id']))
 
 

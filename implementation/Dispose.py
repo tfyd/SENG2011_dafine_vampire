@@ -15,7 +15,7 @@ class Dispose():
         for blood in tested.list:
             if self.checkExp(blood):
                 print("blood " + str(blood.expiration) + " is expired")
-                DisposedBloodList().addBlood(DisposedBlood(blood.id, blood.expiration))
+                DisposedBloodList().addBlood(DisposedBlood(blood.id))
                 tested.extractBlood(blood.id)
                 disposed.append(str(blood.id))
 

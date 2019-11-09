@@ -41,7 +41,7 @@ class Tester(Role):
             if (testPassed == 'Y' or testPassed == 'y'):
                 break
             elif (testPassed == 'N' or testPassed == 'n'):
-                DisposedBloodList().addBlood(DisposedBlood(toBeTested.id, toBeTested.retrievalDate))
+                DisposedBloodList().addBlood(DisposedBlood(toBeTested.id))
                 BeautifulPrint.warning('Blood is pending to be disposed.')
                 return
             else :

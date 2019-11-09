@@ -21,10 +21,9 @@ class StorehouseManager(Role):
 
         i = 1
         for disposed in disposedList.list:
-            retrievalString = datetime.fromtimestamp(disposed.expiration).strftime('%d-%m-%Y %H:%M')
             newLevel.addItem(MenuLevel(
                 id=str(i),
-                title='Disposed sample {} | Expiration Date: {}'.format(str(disposed.id), retrievalString),
+                title='Disposed sample {} '.format(str(disposed.id)),
                 onSelect=callDispose(disposed.id) 
             ))
             i += 1
@@ -71,9 +70,8 @@ class StorehouseManager(Role):
                 print(' expired blood.')
                 for disposed in disposedList.list:
                     expiredId.append(disposed.id)
-                    expirationString = datetime.fromtimestamp(disposed.expiration).strftime('%d-%m-%Y %H:%M')
                     BeautifulPrint.infoPurple(
-                        '  ID:' + str(disposed.id) + ' | Expiration Date: ' + expirationString,
+                        '  ID:' + str(disposed.id),
                         end='\n')
                 BeautifulPrint.warning('Please collect all above blood from storehouse before delete them from system', end='\n')
                 answer = input('Are you sure you want to delete them all (Y/N): ')
