@@ -51,7 +51,6 @@ class TestedBloodList(BloodList):
         for key in keysDict.keys():
             if keysDict[key] < self.cirtialValue:
                 bloodList.append(key)
-        
         return bloodList
 
     def numOfStorageCurrent(self):
