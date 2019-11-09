@@ -2,7 +2,7 @@ from BloodList import BloodList
 from TestedBlood import TestedBlood
 from JsonWriter import JsonWriter
 from BeautifulPrint import BeautifulPrint
-
+import time
 
 class TestedBloodList(BloodList):
     jsonfile = './dataset/TestedBlood.json'
@@ -25,7 +25,7 @@ class TestedBloodList(BloodList):
     def checkStorage(self):
 
         # All valid blood types
-        keysDict = {'O': 0, 'O+': 0, '0-': 0, 'A+': 0, 'A-': 0, 'B+': 0, 'B-': 0, 'AB+': 0, 'AB-': 0}
+        keysDict = {'O': 0, 'O+': 0, 'O-': 0, 'A+': 0, 'A-': 0, 'B+': 0, 'B-': 0, 'AB+': 0, 'AB-': 0}
 
         # Using 3 as a dummy value, replace with real value later
         for key in keysDict.keys():
@@ -35,8 +35,27 @@ class TestedBloodList(BloodList):
 
         for key in keysDict.keys():
             if keysDict[key] < 3:
-                BeautifulPrint.warning('Blood Type: ' + key + ' has ' + str(keysDict[key]) +
+                BeautifulPrint.warning('  Blood Type: ' + key + ' has ' + str(keysDict[key]) +
                                        ' Blood stock remaining. Please get more stock.')
+
+    def numOfStorageCurrent(self):
+
+        self.numOfStorageFuture(time.time())
+
+    def numOfStorageFuture(self, time):
+
+        # All valid blood types
+        keysDict = {'O': 0, 'O+': 0, 'O-': 0, 'A+': 0, 'A-': 0, 'B+': 0, 'B-': 0, 'AB+': 0, 'AB-': 0}
+
+        for key in keysDict.keys():
+            for blood in self.list:
+                if blood.type == key and blood.expiration >= time:
+                    keysDict[key] += 1
+
+        for key in keysDict.keys():
+                BeautifulPrint.warning('  Blood Type: ' + key + ' has ', end='')
+                BeautifulPrint.bold(str(keysDict[key]), end='')                       
+                BeautifulPrint.warning(' Blood stock remaining')
 
     def testedBloodNum(self):
         return len(self.list)

@@ -59,6 +59,14 @@ class StorehouseManager(Role):
         input('Press enter to go back...')
         ScreanCleaner.clear()  
 
+    def viewBloodStockCurrent(self):
+        Dispose().dispose()
+        testedList = TestedBloodList()
+        testedList.sortByExpiryDate()
+        testedList.numOfStorageCurrent()
+        input('Press enter to go back...')
+        ScreanCleaner.clear()  
+
     def disposeAll(self):
         Dispose().dispose()
         disposedList = DisposedBloodList()
@@ -99,7 +107,8 @@ class StorehouseManager(Role):
             inputPrompt='What do you want to do? '
         )
         thisLevel.addItem(MenuLevel('1', 'Dispose Blood', onSelect=self.select))
-        thisLevel.addItem(MenuLevel('2', 'View Blood', onSelect = self.viewBlood))
+        thisLevel.addItem(MenuLevel('2', 'View All Blood', onSelect = self.viewBlood))
         thisLevel.addItem(MenuLevel('3', 'Dispose All Blood', onSelect = self.disposeAll))
+        thisLevel.addItem(MenuLevel('4', 'View Current Blood Stock', onSelect = self.viewBloodStockCurrent))
 
         thisLevel.select()
