@@ -4,7 +4,6 @@ from TestedBloodList import TestedBloodList
 from datetime import datetime
 from Dispose import Dispose
 from ReservedBloodList import ReservedBloodList
-from BeautifulPrint import BeautifulPrint
 import os
 
 class Doctor():
