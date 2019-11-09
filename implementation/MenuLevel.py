@@ -1,5 +1,5 @@
 from BeautifulPrint import BeautifulPrint
-import os
+from ScreanCleaner import ScreanCleaner
 
 # An abstracted class to print levelised menu.
 # Examples & usages are at the end of this file.
@@ -33,13 +33,13 @@ class MenuLevel():
     def run(self):
         while True:
             if self._startPage:
-                os.system('clear') # clear the screen  
+                ScreanCleaner.clear() # clear the screen  
             if self._welcomeMessage:
                 BeautifulPrint.infoBlue(self._welcomeMessage)
             BeautifulPrint.infoPurple(self._showItems(), end='')
             BeautifulPrint.infoBlue(self._inputPrompt, end='')
             userInput = input()
-            os.system('clear') # clear the screen           
+            ScreanCleaner.clear() # clear the screen           
             # A little bit hackey here...
             if (self._backable) and (userInput == 'b'): 
                 return
@@ -99,13 +99,13 @@ class MenuLevel():
 
     @staticmethod
     def quitSystem():
-        os.system('clear')
+        ScreanCleaner.clear()
         print('You are leaving the system. Bye!')
         exit()
 
 if __name__ == "__main__":
     def showLeaf():
-        os.system('clear')
+        ScreanCleaner.clear()
         print('You are running a leaf function here')
         print('use input() function to block the program')
         input('Press enter to continue/go back...')

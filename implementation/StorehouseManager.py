@@ -5,7 +5,7 @@ from TestedBloodList import TestedBloodList
 from Role import Role
 from Dispose import Dispose
 from datetime import datetime
-import os
+from ScreanCleaner import ScreanCleaner
 
 class StorehouseManager(Role):
     
@@ -36,7 +36,7 @@ class StorehouseManager(Role):
         BeautifulPrint.success('Blood sample ' + str(toBeDisposed.id) + ' successed. \nPlease remove the blood to the storehouse')
         
         input('Press enter to go back...')
-        os.system('clear') # clear the screen  
+        ScreanCleaner.clear() # clear the screen  
 
     def viewBlood(self):
         Dispose().dispose()
@@ -56,7 +56,7 @@ class StorehouseManager(Role):
                 end='\n')
 
         input('Press enter to go back...')
-        os.system('clear') # clear the screen  
+        ScreanCleaner.clear() # clear the screen  
 
 
     def showMenu(self):
