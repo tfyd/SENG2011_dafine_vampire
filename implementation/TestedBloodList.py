@@ -54,7 +54,7 @@ class TestedBloodList(BloodList):
             self.list[j+1] = key
 
 
-            # Insertion Swap Sort
+        # Insertion Swap Sort
         # for i in range(1, len(self.list)):
         #
         #     key = self.list[i]
