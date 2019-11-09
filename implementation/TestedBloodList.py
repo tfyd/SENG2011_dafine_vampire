@@ -42,14 +42,19 @@ class TestedBloodList(BloodList):
 
         self.numOfStorageFuture(time.time())
 
-    def numOfStorageFuture(self, time):
+    def numOfStorageFuture(self, date):
 
         # All valid blood types
         keysDict = {'O': 0, 'O+': 0, 'O-': 0, 'A+': 0, 'A-': 0, 'B+': 0, 'B-': 0, 'AB+': 0, 'AB-': 0}
 
+        futureTime = 0
+        if date >= time.time() :
+            futureTime = date
+        else :
+            futureTime = time.time()
         for key in keysDict.keys():
             for blood in self.list:
-                if blood.type == key and blood.expiration >= time:
+                if blood.type == key and blood.expiration >= futureTime:
                     keysDict[key] += 1
 
         for key in keysDict.keys():
