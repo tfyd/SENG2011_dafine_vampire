@@ -35,16 +35,8 @@ class TestedBloodList(BloodList):
 
         for key in keysDict.keys():
             if keysDict[key] < 3:
-                if keysDict[key] > 0:
-                    BeautifulPrint.warning('Blood Type: ' + key + ' has ' + str(keysDict[key]) +
-                                         ' Blood stock remaining. Please get more stock.')
-
-                else:
-                    BeautifulPrint.error('Blood Type: ' + key + ' has ' + str(keysDict[key]) +
+                BeautifulPrint.warning('Blood Type: ' + key + ' has ' + str(keysDict[key]) +
                                        ' Blood stock remaining. Please get more stock.')
-            else:
-                BeautifulPrint.success('Blood Type: ' + key + ' has ' + str(keysDict[key]) +
-                                     ' Blood stock remaining.')
 
     def testedBloodNum(self):
         return len(self.list)
