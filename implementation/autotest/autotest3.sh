@@ -11,3 +11,4 @@ echo -e '1\n1\n04/11/2020 12:12\n\nb\n2\n1\n1\n\nb\n2\n1\nY\nO\n25/11/2025 15:16
 # Type N
 echo -e '1\n1\n05/11/2020 12:12\n\nb\n2\n1\n1\n\nb\n2\n1\nN\n\n\b\nq\n' | python main.py > /dev/null
 echo "Test 3 passed"
+
