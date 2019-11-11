@@ -14,43 +14,49 @@ import time
 
 class Tester(Role):
     def select(self):
-        callTest = lambda id: lambda: self.startTest(id)
-        untestedList = UntestedBloodList()
+        def refresh(level):
+            level.emptyItems()
+            callTest = lambda id: lambda: self.startTest(id)
+            untestedList = UntestedBloodList()
+            i = 1
+            for untested in untestedList.list:
+                level.addItem(MenuLevel(
+                    id=str(i),
+                    title='Untested sample {}'.format(str(untested.id)),
+                    onSelect=callTest(untested.id) 
+                ))
+                i += 1
+            return level
     
         newLevel = MenuLevel(
             welcomeMessage='We have these untested blood in the storehouse:',
-            inputPrompt='Select one of the blood you want to test: '
+            inputPrompt='Select one of the blood you want to test: ',
+            onRefresh=lambda: refresh(newLevel),
         )
-
-        i = 1
-        for untested in untestedList.list:
-            newLevel.addItem(MenuLevel(
-                id=str(i),
-                title='Untested sample {}'.format(str(untested.id)),
-                onSelect=callTest(untested.id) 
-            ))
-            i += 1
 
         newLevel.run()
     
     def fill(self):
-        callFill = lambda id: lambda: self.test(id)
-        testingList = TestingBloodList()
-    
+        def refresh(level):
+            level.emptyItems()
+            callFill = lambda id: lambda: self.test(id)
+            testingList = TestingBloodList()
+            i = 1
+            for testing in testingList.list:
+                startDateString = datetime.fromtimestamp(testing.startTestDate).strftime('%d-%m-%Y %H:%M')
+                level.addItem(MenuLevel(
+                    id=str(i),
+                    title='Pending sample {} | Testing Start Date {}'.format(str(testing.id), str(startDateString)),
+                    onSelect=callFill(testing.id) 
+                ))
+                i += 1
+            return level
+        
         newLevel = MenuLevel(
             welcomeMessage='We have these testing blood in the pending:',
-            inputPrompt='Select one of the blood you want to fill in test result: '
+            inputPrompt='Select one of the blood you want to fill in test result: ',
+            onRefresh=lambda: refresh(newLevel)
         )
-
-        i = 1
-        for testing in testingList.list:
-            startDateString = datetime.fromtimestamp(testing.startTestDate).strftime('%d-%m-%Y %H:%M')
-            newLevel.addItem(MenuLevel(
-                id=str(i),
-                title='Pending sample {} | Testing Start Date {}'.format(str(testing.id), str(startDateString)),
-                onSelect=callFill(testing.id) 
-            ))
-            i += 1
 
         newLevel.run()
 
@@ -114,7 +120,6 @@ class Tester(Role):
         )
         thisLevel.addItem(MenuLevel('1', 'Test blood', onSelect=self.select))
         thisLevel.addItem(MenuLevel('2', 'Fill in result', onSelect=self.fill))
-        thisLevel.addItem(MenuLevel('3', 'Placeholder'))
 
         thisLevel.select()
         

@@ -18,7 +18,6 @@ class DonationManager(Role):
         )
         thisLevel.addItem(MenuLevel('1', 'Insert blood', onSelect=self.insertBlood))
         thisLevel.addItem(MenuLevel('2', 'View blood', onSelect=self.viewBlood))
-        thisLevel.addItem(MenuLevel('3', '...'))
 
         thisLevel.select()
         

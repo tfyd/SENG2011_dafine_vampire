@@ -10,15 +10,17 @@ class MenuLevel():
     _title = ''
     _backable = True
     _onSelect = None
+    _onRefresh = None
     _startPage= False
 
-    def __init__(self, id='', title='', welcomeMessage=None, backable=True, onSelect=None, inputPrompt=None, startPage=False):
+    def __init__(self, id='', title='', welcomeMessage=None, backable=True, onSelect=None, inputPrompt=None, startPage=False, onRefresh=None):
         self._id = id
         self._title = title
         self._subLevels = []
         self._welcomeMessage = welcomeMessage
         self._backable = backable
         self._onSelect = onSelect
+        self._onRefresh = onRefresh
         self._startPage = startPage
         self._inputPrompt = 'Please choose one item: '
         if inputPrompt:
@@ -32,6 +34,8 @@ class MenuLevel():
     
     def run(self):
         while True:
+            if self._onRefresh is not None:
+                self._onRefresh()
             if self._startPage:
                 ScreanCleaner.clear() # clear the screen  
             if self._welcomeMessage:
@@ -81,6 +85,9 @@ class MenuLevel():
         if target is not None:
             self._subLevels.remove(target)
 
+    def emptyItems(self):
+        self._subLevels = []
+
     def __str__(self):
         return '  ' + self.id + '. ' + self.title
 
@@ -113,20 +120,32 @@ if __name__ == "__main__":
     def dynamicLoad():
         import random
 
+        # A function used to modified the level
+        # This function should reassemble the level
+        # This function will be called at every time when the level is going to be displayed, including the first time
+        # argument: 
+        #   - root: the level need to be changed
+        # return: 
+        #   - root: the level after changed
+        def refresh(root):
+            root.emptyItems() # !!!Don't forget this!!!
+            
+            nMenu = random.randint(1, 3)
+            for i in range(nMenu):
+                dynamicNode = MenuLevel(
+                    id=str(i),
+                    title='Number of sub-item can be dynamic generated'
+                )
+                root.addItem(dynamicNode)
+            return root
+
         # A random subtree
         dynamicRoot = MenuLevel(
             welcomeMessage= '= Random Number =\n ' +
                             str(random.randint(1000000000, 9999999999)) + '\n'
-                            '================='
+                            '=================',
+            onRefresh=lambda: refresh(dynamicRoot) # pass in a refresh function call tell it how to refresh
         )
-
-        nMenu = random.randint(1, 3)
-        for i in range(nMenu):
-            dynamicNode = MenuLevel(
-                id=str(i),
-                title='Number of sub-item can be dynamic generated'
-            )
-            dynamicRoot.addItem(dynamicNode)
         
         # Dynamic load here
         dynamicRoot.run()
