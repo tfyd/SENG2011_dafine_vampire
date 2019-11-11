@@ -13,7 +13,7 @@ class {:autocontracts} BloodList
 
   constructor(size: int)
   requires size > 0;
-  ensures fresh(list);
+  ensures fresh(list);  
   {
     list := new Blood[size];
     upto := 0;
@@ -78,44 +78,7 @@ class {:autocontracts} BloodList
 }
 
 
-// haven't complete verifying this part
-/*method addBlood(a:seq<int>,id:int) returns (a:seq<int>)
-  requires |a| > 0
-  ensures id in a
-{ 
-  a := a + [id];
-}
-
-
-method RemoveBlood(a:seq<int>, id:int)returns (b:seq<int>)
-  requires |a|>0
-  ensures id !in a ==> a == b;
- // ensures forall k :: 0<=k<|b| ==> (b[k]!=id);
-{
- var i:=0;
- assert i==0;
- 
- while i < |a|
- invariant 0<=i<=|a|
- invariant forall k :: 0<=k<i ==> (a[k]!=id);
- decreases |a|-i
- {
-   if a[i]==id 
-   {
-      assert a[i]==id;
-      assert id in a;
-      b :=a[..i] + a[i+1..];
-      return;
-   }
-   i := i+1;
- }
- assert forall k:: 0<=k<|a| ==> (a[k]!=id); 
- assert i ==|a|;
- b := a[..];  
- assert a==b;
-}
-
-
+/*
 method Main() {
   var s:seq<int> := [20,18,33,44];
   print s[..];
