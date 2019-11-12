@@ -85,7 +85,7 @@ class {:autocontracts} TestedBloodList
             }
             up:=up+1;
         }
-        assert  list != null && list.Length > 0 && 0 <= upto <= list.Length
+        assert list != null && list.Length > 0 && 0 <= upto <= list.Length
                  && forall i :: 0 <= i < upto ==> list[i] != null;
     }
 

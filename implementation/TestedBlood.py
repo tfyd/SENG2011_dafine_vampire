@@ -19,4 +19,4 @@ class TestedBlood(Blood):
             'retrievalDate': int(self.retrievalDate),
             'type': str(self.type),
             'expiration': int(self.expiration)
-        }
+        } 
