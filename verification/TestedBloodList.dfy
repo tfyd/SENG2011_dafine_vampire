@@ -49,9 +49,53 @@ class {:autocontracts} TestedBloodList
     
 
     method sortByExpiryDate()
+    requires list != null // 1.9.7
+    requires list.Length > 1 && upto > 1
+    ensures Sorted(0, upto);
+    ensures multiset(list[..]) == multiset(old(list[..]));
+    ensures upto == old(upto);
+    ensures list != null;
+    modifies list;
     {
-
+        var up:=1;
+        while (up < upto)
+        invariant list != null;
+        invariant 0 <= upto <= list.Length;
+        invariant 1 <= up <= upto;
+        invariant forall i :: 0 <= i < up ==> list[i] != null
+        invariant Sorted(0, up);
+        invariant multiset(list[..upto]) == multiset(old(list[..upto]));
+        invariant list != null && list.Length > 0 && 0 <= upto <= list.Length
+                   && forall i :: 0 <= i < upto ==> list[i] != null
+        {
+            var down := up; 
+            while (down >= 1 && list[down-1].expiration > list[down].expiration)
+            invariant 0 <= down <= up;
+            invariant list != null;
+            invariant 0 <= upto <= list.Length;
+            invariant 1 <= up <= upto;
+            invariant forall i :: 0 <= i < up ==> list[i] != null
+            invariant forall i,j:: (0<=i<j<=up && j!=down) ==> list[i].expiration<=list[j].expiration;
+            invariant multiset(list[..upto]) == multiset(old(list[..upto]));
+            invariant list != null && list.Length > 0 && 0 <= upto <= list.Length
+                      && forall i :: 0 <= i < upto ==> list[i] != null
+            {
+                list[down-1], list[down] := list[down], list[down-1];
+                down:=down-1;
+            }
+            up:=up+1;
+        }
+        assert  list != null && list.Length > 0 && 0 <= upto <= list.Length
+                 && forall i :: 0 <= i < upto ==> list[i] != null;
     }
+
+    predicate Sorted(low:int, high:int)
+    requires list != null 
+    requires 0 <= upto <= list.Length
+    requires 0<=low<=high<=upto
+    requires forall i :: low <= i < high ==> list[i] != null
+    reads this, list, set m | low <= m < high :: list[m]`expiration
+    { forall j,k:: low<=j<k<high ==> list[j].expiration<=list[k].expiration }
 
     method addBlood(blood: TestedBlood)
     requires blood != null
