@@ -124,52 +124,32 @@ class {:autocontracts} TestedBloodList
 
     }
 
-    method getBlood(id: int) returns (blood: TestedBlood)
-    ensures blood == null ==> forall t :: 0 <= t < upto ==> list[t] != blood;
-    ensures blood != null ==> blood.id == id;
-    ensures blood != null ==> exists t :: 0 <= t < upto && list[t] == blood;
-    {
-        var i:= 0;
-        blood := null;
-        while (i < upto) 
-        invariant 0 <= i <= upto;
-        invariant blood != null ==> list[i].id == blood.id == id;
-        invariant blood == null ==> forall t :: 0 <= t < i ==> list[t] != blood;
-        {
-            if list[i].id == id {
-                blood := list[i];
-                break;
-            }
-            i := i + 1;
-        }
-    }
-
-
-    method removeBlood(blood: TestedBlood)
+    
+    method extractBlood(id: int) returns (bloodFound: bool, blood: TestedBlood)
     requires upto > 0;
-    requires exists t :: 0 <= t < upto && list[t] == blood;
-    ensures upto == old(upto) - 1;
-    ensures exists t :: 0 <= t < old(upto) && old(list[t]) == blood
+    ensures bloodFound ==> upto == old(upto) - 1;
+    ensures bloodFound ==> exists t :: 0 <= t < old(upto) && old(list[t]) == blood
                         && forall p :: 0 <= p < t ==> list[p] == old(list[p])
                         && forall q :: t < q < old(upto) ==> list[q-1] == old(list[q]);
-    ensures blood.id == old(blood.id);
-    ensures blood == old(blood);
-    modifies this, list, this`upto;
+    ensures bloodFound ==> blood.id == id;
+    modifies this.list, this`upto;
     {
+        bloodFound := false;
+        blood := null;
         var i:=0;
-        var bloodFound := false;
         var bloodIndex := -1;
-        while i <= upto
+        while i < upto
         invariant 0 <= i <= upto;
         invariant forall k :: 0 <= k < i ==> list[k] != blood;
         invariant forall j :: 0 <= j < i ==> list[j] == old(list[j])
         invariant bloodFound ==> forall l :: bloodIndex < l < i ==> list[l-1] == old(list[l])
         decreases upto - i;
         {
-            if list[i] == blood
+            if list[i].id == id
             {
                 bloodFound := true;
                 bloodIndex := i;
+                blood := list[i];
                 forall(j | i < j < upto)
                 {
                     list[j - 1] := list[j];
@@ -180,18 +160,19 @@ class {:autocontracts} TestedBloodList
         }
 
         upto := upto - 1;
-
     }
+}
 
-    method extractBlood(id: int) // returns (blood: TestedBlood)
-    // ensures blood != null ==> id == blood.id
-    modifies this, this.list, this`upto
-    {
-        var blood := getBlood(id);
-        if(blood != null){
-            assert blood.id == id;
-            removeBlood(blood);
-            assert blood.id == id;
-        }
-    }
+method Main()
+{
+    var blood := new TestedBlood(0, 2, O, 4);
+    var blood2 := new TestedBlood(1, 2, O, 3);
+    var bloodlist := new TestedBloodList(5);
+    bloodlist.addBlood(blood);
+    bloodlist.addBlood(blood2);
+    print blood.id, "\n";
+    print bloodlist.upto, "\n";
+    // assert bloodlist.upto == 2;
+    var find, removed := bloodlist.extractBlood(0);
+    print bloodlist.upto, "\n";
 }

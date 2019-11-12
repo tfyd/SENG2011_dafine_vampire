@@ -5,9 +5,16 @@ include "ReservedBloodList.dfy"
 // remove from testedbloodlist
 // add to reservedlist
 method reserveBlood(id: int, testedlist: TestedBloodList, reservedlist: ReservedBloodList) 
-modifies testedlist, reservedlist
+requires testedlist != null && reservedlist != null
+requires testedlist.Valid() && reservedlist.Valid()
+requires testedlist.upto > 0
+// modifies testedlist.list, testedlist`upto
 {
-    testedlist.
+    var find, b := testedlist.extractBlood(id);
+    /*var b := testedlist.getBlood(id);
+    if(b != null){
+        testedlist.removeBlood(b);
+    }*/
 }
 
 // not sure if we need this
