@@ -49,7 +49,7 @@ class {:autocontracts} TestedBloodList
     }
     
 
-    method sortByExpiryDate()
+    /*method sortByExpiryDate()
     requires list != null // 1.9.7
     requires list.Length > 1 && upto > 1
     ensures Sorted(0, upto);
@@ -88,7 +88,7 @@ class {:autocontracts} TestedBloodList
         }
         assert list != null && list.Length > 0 && 0 <= upto <= list.Length
                  && forall i :: 0 <= i < upto ==> list[i] != null;
-    }
+    }*/
 
     predicate Sorted(low:int, high:int)
     requires list != null 
@@ -98,13 +98,15 @@ class {:autocontracts} TestedBloodList
     reads this, list, set m | low <= m < high :: list[m]`expiration
     { forall j,k:: low<=j<k<high ==> list[j].expiration<=list[k].expiration }
 
+
     method addBlood(blood: TestedBlood)
     requires blood != null
     ensures upto > 0
     ensures list[upto-1] == blood;
     ensures upto == old(upto) + 1;
     ensures old(list[0..old(upto)]) == list[0..old(upto)];
-    ensures old(upto) == old(list).Length ==> list.Length == 2*old(list).Length;
+    ensures old(upto) == old(list).Length ==> fresh(list) && list.Length == 2*old(list).Length;
+    modifies this, list, this`upto
     {
         assert list.Length != 0;
         if upto == list.Length
@@ -123,12 +125,16 @@ class {:autocontracts} TestedBloodList
     }
 
     method getBlood(id: int) returns (blood: TestedBlood)
+    ensures blood == null ==> forall t :: 0 <= t < upto ==> list[t] != blood;
+    ensures blood != null ==> blood.id == id;
     ensures blood != null ==> exists t :: 0 <= t < upto && list[t] == blood;
     {
         var i:= 0;
         blood := null;
         while (i < upto) 
-        invariant blood != null ==> exists t :: 0 <= t <= i && list[t] == blood;
+        invariant 0 <= i <= upto;
+        invariant blood != null ==> list[i].id == blood.id == id;
+        invariant blood == null ==> forall t :: 0 <= t < i ==> list[t] != blood;
         {
             if list[i].id == id {
                 blood := list[i];
@@ -146,6 +152,9 @@ class {:autocontracts} TestedBloodList
     ensures exists t :: 0 <= t < old(upto) && old(list[t]) == blood
                         && forall p :: 0 <= p < t ==> list[p] == old(list[p])
                         && forall q :: t < q < old(upto) ==> list[q-1] == old(list[q]);
+    ensures blood.id == old(blood.id);
+    ensures blood == old(blood);
+    modifies this, list, this`upto;
     {
         var i:=0;
         var bloodFound := false;
@@ -165,7 +174,6 @@ class {:autocontracts} TestedBloodList
                 {
                     list[j - 1] := list[j];
                 }
-
                 break;
             }
             i := i + 1;
@@ -175,12 +183,15 @@ class {:autocontracts} TestedBloodList
 
     }
 
-    method extractBlood(id: int)
+    method extractBlood(id: int) // returns (blood: TestedBlood)
+    // ensures blood != null ==> id == blood.id
+    modifies this, this.list, this`upto
     {
-        var blood: TestedBlood;
-        blood := getBlood(id);
+        var blood := getBlood(id);
         if(blood != null){
+            assert blood.id == id;
             removeBlood(blood);
+            assert blood.id == id;
         }
     }
 }

@@ -5,8 +5,9 @@ include "ReservedBloodList.dfy"
 // remove from testedbloodlist
 // add to reservedlist
 method reserveBlood(id: int, testedlist: TestedBloodList, reservedlist: ReservedBloodList) 
+modifies testedlist, reservedlist
 {
-
+    testedlist.
 }
 
 // not sure if we need this
