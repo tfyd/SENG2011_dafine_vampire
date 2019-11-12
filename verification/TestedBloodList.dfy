@@ -41,10 +41,11 @@ class {:autocontracts} TestedBloodList
 
     }
 
-    // should just return the length
-    method testedBloodNum()
-    {
 
+    method testedBloodNum() returns (num: int)
+    ensures num == upto;
+    {
+        num := upto;
     }
     
 
