@@ -8,11 +8,21 @@ method reserveBlood(id: int, testedlist: TestedBloodList, reservedlist: Reserved
 requires testedlist != null && reservedlist != null
 requires testedlist.Valid() && reservedlist.Valid()
 requires testedlist.upto > 0
+requires forall i :: 0 <= i < reservedlist.upto ==> 
+        (forall j :: 0 <= j < testedlist.upto ==> testedlist.list[j] != reservedlist.list[i])
 modifies testedlist, testedlist.list, testedlist`upto
+modifies reservedlist, reservedlist.list, reservedlist`upto
 {
+    assert reservedlist.Valid();
     var find, b := testedlist.extractBlood(id);
-    if(find){
-        
+    assert reservedlist == old(reservedlist);
+    assert reservedlist.list == old(reservedlist.list);
+    assert reservedlist.upto == old(reservedlist.upto);
+    assert forall i :: 0 <= i < reservedlist.upto ==> reservedlist.list[i] == old(reservedlist.list[i]);
+    assert reservedlist.Valid();
+    if(b != null){
+        assert reservedlist.Valid();
+        reservedlist.addBlood(b);
     }
 }
 

@@ -52,11 +52,12 @@ class TestedBloodList
     }
     
 
-    /*method sortByExpiryDate()
+    method sortByExpiryDate()
     requires list != null // 1.9.7
     requires list.Length > 1 && upto > 1
+    requires Valid(); ensures Valid();
     ensures Sorted(0, upto);
-    ensures multiset(list[..]) == multiset(old(list[..]));
+    ensures multiset(list[..upto]) == multiset(old(list[..upto]));
     ensures upto == old(upto);
     ensures list != null;
     modifies list;
@@ -67,6 +68,7 @@ class TestedBloodList
         invariant 0 <= upto <= list.Length;
         invariant 1 <= up <= upto;
         invariant forall i :: 0 <= i < up ==> list[i] != null
+        invariant Valid();
         invariant Sorted(0, up);
         invariant multiset(list[..upto]) == multiset(old(list[..upto]));
         invariant list != null && list.Length > 0 && 0 <= upto <= list.Length
@@ -77,8 +79,8 @@ class TestedBloodList
             invariant 0 <= down <= up;
             invariant list != null;
             invariant 0 <= upto <= list.Length;
-            invariant 1 <= up <= upto;
-            invariant forall i :: 0 <= i < up ==> list[i] != null
+            invariant 1 <= up < upto;
+            invariant forall i :: 0 <= i <= up ==> list[i] != null
             invariant forall i,j:: (0<=i<j<=up && j!=down) ==> list[i].expiration<=list[j].expiration;
             invariant multiset(list[..upto]) == multiset(old(list[..upto]));
             invariant list != null && list.Length > 0 && 0 <= upto <= list.Length
@@ -91,10 +93,10 @@ class TestedBloodList
         }
         assert list != null && list.Length > 0 && 0 <= upto <= list.Length
                  && forall i :: 0 <= i < upto ==> list[i] != null;
-    }*/
+    }
 
     predicate Sorted(low:int, high:int)
-    requires Valid();
+    requires Valid(); ensures Valid();
     requires list != null 
     requires 0 <= upto <= list.Length
     requires 0<=low<=high<=upto
