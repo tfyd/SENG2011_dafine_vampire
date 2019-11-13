@@ -1,12 +1,12 @@
 include "TestedBlood.dfy"
 
-class {:autocontracts} ReservedBloodList
+class ReservedBloodList
 {
     var list: array<TestedBlood>;
     var upto: int;
 
     predicate Valid()
-    reads this;
+    reads this, this.list, this`upto;
     {
         list != null && list.Length > 0 && 0 <= upto <= list.Length
         && forall i :: 0 <= i < upto ==> list[i] != null
@@ -14,26 +14,23 @@ class {:autocontracts} ReservedBloodList
 
     constructor(size: int)
     requires size > 0;
-    ensures fresh(list);  
+    ensures Valid(); 
+    ensures fresh(list);
+    modifies this, this.list, this`upto
     {
         list := new TestedBlood[size];
         upto := 0;
     }
 
-    // Waiting for implement
-    method sortByExpiryDate() 
-    {
-
-    }
-
 
     method addBlood(blood: TestedBlood)
+    ensures Valid(); requires Valid();
     requires blood != null
     ensures upto > 0
     ensures list[upto-1] == blood;
     ensures upto == old(upto) + 1;
-    ensures old(list[0..old(upto)]) == list[0..old(upto)];
-    ensures old(upto) == old(list).Length ==> list.Length == 2*old(list).Length;
+    ensures old(upto) == old(list.Length) ==> fresh(list) && list.Length == 2*old(list).Length;
+    modifies this, this.list, this`upto
     {
         assert list.Length != 0;
         if upto == list.Length
@@ -51,65 +48,42 @@ class {:autocontracts} ReservedBloodList
 
     }
 
-    method getBlood(id: int) returns (blood: TestedBlood)
-    ensures blood != null ==> exists t :: 0 <= t < upto && list[t] == blood;
-    {
-        var i:= 0;
-        blood := null;
-        while (i < upto) 
-        invariant blood != null ==> exists t :: 0 <= t <= i && list[t] == blood;
-        {
-            if list[i].id == id {
-                blood := list[i];
-                break;
-            }
-            i := i + 1;
-        }
-    }
-
-
-    method removeBlood(blood: TestedBlood)
+    
+    method extractBlood(id: int) returns (bloodFound: bool, blood: TestedBlood)
+    ensures Valid(); requires Valid();
     requires upto > 0;
-    requires exists t :: 0 <= t < upto && list[t] == blood;
-    ensures upto == old(upto) - 1;
-    ensures exists t :: 0 <= t < old(upto) && old(list[t]) == blood
+    ensures bloodFound ==> upto == old(upto) - 1;
+    ensures bloodFound ==> exists t :: 0 <= t < old(upto) && old(list[t]) == blood
                         && forall p :: 0 <= p < t ==> list[p] == old(list[p])
                         && forall q :: t < q < old(upto) ==> list[q-1] == old(list[q]);
+    ensures bloodFound ==> blood.id == id;
+    modifies this.list, this`upto;
     {
+        bloodFound := false;
+        blood := null;
         var i:=0;
-        var bloodFound := false;
         var bloodIndex := -1;
-        while i <= upto
+        while i < upto
         invariant 0 <= i <= upto;
         invariant forall k :: 0 <= k < i ==> list[k] != blood;
         invariant forall j :: 0 <= j < i ==> list[j] == old(list[j])
         invariant bloodFound ==> forall l :: bloodIndex < l < i ==> list[l-1] == old(list[l])
         decreases upto - i;
         {
-            if list[i] == blood
+            if list[i].id == id
             {
                 bloodFound := true;
                 bloodIndex := i;
+                blood := list[i];
                 forall(j | i < j < upto)
                 {
                     list[j - 1] := list[j];
                 }
-
                 break;
             }
             i := i + 1;
         }
 
         upto := upto - 1;
-
-    }
-
-    method extractBlood(id: int)
-    {
-        var blood: TestedBlood;
-        blood := getBlood(id);
-        if(blood != null){
-            removeBlood(blood);
-        }
     }
 }
