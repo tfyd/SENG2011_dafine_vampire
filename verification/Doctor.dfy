@@ -8,13 +8,12 @@ method reserveBlood(id: int, testedlist: TestedBloodList, reservedlist: Reserved
 requires testedlist != null && reservedlist != null
 requires testedlist.Valid() && reservedlist.Valid()
 requires testedlist.upto > 0
-// modifies testedlist.list, testedlist`upto
+modifies testedlist, testedlist.list, testedlist`upto
 {
     var find, b := testedlist.extractBlood(id);
-    /*var b := testedlist.getBlood(id);
-    if(b != null){
-        testedlist.removeBlood(b);
-    }*/
+    if(find){
+        
+    }
 }
 
 // not sure if we need this

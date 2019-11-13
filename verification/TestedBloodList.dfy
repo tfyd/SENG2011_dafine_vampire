@@ -1,12 +1,12 @@
 include "TestedBlood.dfy"
 
-class {:autocontracts} TestedBloodList
+class TestedBloodList
 {
     var list: array<TestedBlood>;
     var upto: int;
 
     predicate Valid()
-    reads this;
+    reads this, this.list, this`upto;
     {
         list != null && list.Length > 0 && 0 <= upto <= list.Length
         && forall i :: 0 <= i < upto ==> list[i] != null
@@ -14,7 +14,9 @@ class {:autocontracts} TestedBloodList
 
     constructor(size: int)
     requires size > 0;
-    ensures fresh(list);  
+    ensures Valid(); 
+    ensures fresh(list);
+    modifies this, this.list, this`upto
     {
         list := new TestedBlood[size];
         upto := 0;
@@ -43,6 +45,7 @@ class {:autocontracts} TestedBloodList
 
 
     method testedBloodNum() returns (num: int)
+    ensures Valid(); requires Valid();
     ensures num == upto;
     {
         num := upto;
@@ -91,6 +94,7 @@ class {:autocontracts} TestedBloodList
     }*/
 
     predicate Sorted(low:int, high:int)
+    requires Valid();
     requires list != null 
     requires 0 <= upto <= list.Length
     requires 0<=low<=high<=upto
@@ -100,13 +104,13 @@ class {:autocontracts} TestedBloodList
 
 
     method addBlood(blood: TestedBlood)
+    ensures Valid(); requires Valid();
     requires blood != null
     ensures upto > 0
     ensures list[upto-1] == blood;
     ensures upto == old(upto) + 1;
-    ensures old(list[0..old(upto)]) == list[0..old(upto)];
-    ensures old(upto) == old(list).Length ==> fresh(list) && list.Length == 2*old(list).Length;
-    modifies this, list, this`upto
+    ensures old(upto) == old(list.Length) ==> fresh(list) && list.Length == 2*old(list).Length;
+    modifies this, this.list, this`upto
     {
         assert list.Length != 0;
         if upto == list.Length
@@ -126,6 +130,7 @@ class {:autocontracts} TestedBloodList
 
     
     method extractBlood(id: int) returns (bloodFound: bool, blood: TestedBlood)
+    ensures Valid(); requires Valid();
     requires upto > 0;
     ensures bloodFound ==> upto == old(upto) - 1;
     ensures bloodFound ==> exists t :: 0 <= t < old(upto) && old(list[t]) == blood
@@ -163,7 +168,7 @@ class {:autocontracts} TestedBloodList
     }
 }
 
-method Main()
+/*method Main()
 {
     var blood := new TestedBlood(0, 2, O, 4);
     var blood2 := new TestedBlood(1, 2, O, 3);
@@ -172,7 +177,7 @@ method Main()
     bloodlist.addBlood(blood2);
     print blood.id, "\n";
     print bloodlist.upto, "\n";
-    // assert bloodlist.upto == 2;
+    //assert bloodlist.upto == 2;
     var find, removed := bloodlist.extractBlood(0);
     print bloodlist.upto, "\n";
-}
+}*/
