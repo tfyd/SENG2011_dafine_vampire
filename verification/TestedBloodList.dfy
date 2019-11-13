@@ -16,7 +16,7 @@ class TestedBloodList
     requires size > 0;
     ensures Valid(); 
     ensures fresh(list);
-    modifies this, this.list, this`upto
+    modifies this
     {
         list := new TestedBlood[size];
         upto := 0;
@@ -170,16 +170,23 @@ class TestedBloodList
     }
 }
 
-/*method Main()
+method Main()
 {
     var blood := new TestedBlood(0, 2, O, 4);
-    var blood2 := new TestedBlood(1, 2, O, 3);
+    var blood2 := new TestedBlood(1, 2, O, 5);
+    var blood3 := new TestedBlood(2, 2, O, 3);
     var bloodlist := new TestedBloodList(5);
     bloodlist.addBlood(blood);
     bloodlist.addBlood(blood2);
-    print blood.id, "\n";
-    print bloodlist.upto, "\n";
-    //assert bloodlist.upto == 2;
+    bloodlist.addBlood(blood3);
+    bloodlist.sortByExpiryDate();
+
+    // assert bloodlist.list[0].expiration == 3;
+    print bloodlist.list[0].expiration, "\n";
+    print bloodlist.list[1].expiration, "\n";
+    print bloodlist.list[2].expiration, "\n";
+    
+    print "upto = ", bloodlist.upto, "\n";
     var find, removed := bloodlist.extractBlood(0);
     print bloodlist.upto, "\n";
-}*/
+}
