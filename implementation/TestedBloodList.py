@@ -7,7 +7,7 @@ import time
 class TestedBloodList(BloodList):
     jsonfile = './dataset/TestedBlood.json'
     # Using 3 as a dummy value, replace with real value later
-    cirtialValue = 3
+    criticalValue = 3
 
     def __init__(self):
         super().__init__()
@@ -33,11 +33,16 @@ class TestedBloodList(BloodList):
             for blood in self.list:
                 if blood.type == key:
                     keysDict[key] += 1
-
         for key in keysDict.keys():
-            if keysDict[key] < self.cirtialValue:
+            if keysDict[key] == 0:
+                BeautifulPrint.error('  Blood Type: ' + key + ' has ' + str(keysDict[key]) +
+                                     ' Blood stock remaining. Please get more stock.')
+            elif keysDict[key] < self.criticalValue:
                 BeautifulPrint.warning('  Blood Type: ' + key + ' has ' + str(keysDict[key]) +
                                        ' Blood stock remaining. Please get more stock.')
+            else:
+                BeautifulPrint.success('  Blood Type: ' + key + ' has ' + str(keysDict[key]) +
+                                       ' Blood stock remaining.')
 
     def insufficentBloodList(self):
         keysDict = {'O': 0, 'O+': 0, 'O-': 0, 'A+': 0, 'A-': 0, 'B+': 0, 'B-': 0, 'AB+': 0, 'AB-': 0}
@@ -49,7 +54,7 @@ class TestedBloodList(BloodList):
                     keysDict[key] += 1
 
         for key in keysDict.keys():
-            if keysDict[key] < self.cirtialValue:
+            if keysDict[key] < self.criticalValue:
                 bloodList.append(key)
         return bloodList
 
