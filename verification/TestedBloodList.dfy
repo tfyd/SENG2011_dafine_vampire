@@ -22,25 +22,21 @@ class TestedBloodList
         upto := 0;
     }
 
-    method checkStorage()
+    // Print for each of blood type
+    // Instead of print, in dafny, we return the multiset
+    // * Got stuck on verifying this one
+    method numOfStorageCurrent() returns (summary: multiset<BloodType>)
+    requires Valid(); ensures Valid();
     {
-        
-    }
-
-
-    method insufficentBloodList()
-    {
-
-    }
-
-    method numOfStorageCurrent()
-    {
-
-    }
-
-    method numOfStorageFuture(date: int)
-    {
-
+        var types: seq<BloodType> := []; 
+        var i := 0;
+        while (i < upto) 
+            invariant 0 <= i <= upto;
+        {
+            types := types + [list[i].bloodType];
+            i := i+1;
+        }
+        summary := multiset(types);
     }
 
 
