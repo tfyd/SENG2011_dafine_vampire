@@ -1,6 +1,6 @@
 include "UntestedBlood.dfy"
 
-class ReservedBloodList
+class UntestedBloodList
 {
     var list: array<UntestedBlood>;
     var upto: int;

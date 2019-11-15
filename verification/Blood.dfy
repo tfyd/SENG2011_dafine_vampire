@@ -1,10 +1,9 @@
 // Untested | Tested | Disposed
-datatype State = UT | TD | DP
+datatype State = UNTESTED | TESTED | DISPOSED
 
 // datatype BloodType = 'O' | 'O+' | 'O-' | 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-'
 // above cause some error can't fix
-// UD means undefined
-datatype BloodType = A | B | O | AB | UD
+datatype BloodType = A | B | O | AB | UNDEFINED
 
 class {:autocontracts} Blood {
 
@@ -18,42 +17,42 @@ class {:autocontracts} Blood {
     reads this
     {
         id != -1
-        && (state == UT ==> bloodType == UD && expiration == -1 && retrieval != -1)
-        && (state == TD ==> bloodType != UD && expiration != -1 && retrieval != -1 && expiration > retrieval)
-        && (state == DP ==> bloodType == UD && expiration == -1 && retrieval == -1)
+        && (state == UNTESTED ==> bloodType == UNDEFINED && expiration == -1 && retrieval != -1)
+        && (state == TESTED ==> bloodType != UNDEFINED && expiration != -1 && retrieval != -1 && expiration > retrieval)
+        && (state == DISPOSED ==> bloodType == UNDEFINED && expiration == -1 && retrieval == -1)
     }
 
     constructor (bloodid: int, rdate: int)
     requires bloodid > 0 && rdate > 0
-    ensures state == UT && bloodType == UD && expiration == -1 
+    ensures state == UNTESTED && bloodType == UNDEFINED && expiration == -1 
             && retrieval == rdate && id == bloodid;
     {
         id := bloodid;
-        state := UT;
-        bloodType := UD;
+        state := UNTESTED;
+        bloodType := UNDEFINED;
         retrieval := rdate;
         expiration := -1;
     }
 
     method testSucc (exdate: int, tp: BloodType) 
-    requires exdate > 0 && state == UT && tp != UD
+    requires exdate > 0 && state == UNTESTED && tp != UNDEFINED
     requires exdate > retrieval
-    ensures state == TD && expiration == exdate && bloodType == tp 
+    ensures state == TESTED && expiration == exdate && bloodType == tp 
     ensures retrieval == old(retrieval) && id == old(id)
     {
         expiration := exdate;
         bloodType := tp;  
-        state := TD;   
+        state := TESTED;   
     }
 
     // if failed test just dispose I think?
     method disposeBlood() 
-    requires state == UT || state == TD
-    ensures state == DP && bloodType == UD && expiration == -1 && retrieval == -1
+    requires state == UNTESTED || state == TESTED
+    ensures state == DISPOSED && bloodType == UNDEFINED && expiration == -1 && retrieval == -1
     ensures id == old(id)
     {
-        state := DP;
-        bloodType := UD;
+        state := DISPOSED;
+        bloodType := UNDEFINED;
         expiration := -1;
         retrieval := -1;
     }
