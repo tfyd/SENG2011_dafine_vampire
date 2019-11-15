@@ -8,3 +8,4 @@ class Blood(ABC):
     @abstractmethod
     def toDictionary(self):
         pass
+

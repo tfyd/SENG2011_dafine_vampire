@@ -11,23 +11,26 @@ import time
 class StorehouseManager(Role):
     
     def select(self):
-        callDispose = lambda id: lambda: self.dispose(id)
-        Dispose().dispose()
-        disposedList = DisposedBloodList()
-
+        def refresh(level):
+            callDispose = lambda id: lambda: self.dispose(id)
+            Dispose().dispose()
+            disposedList = DisposedBloodList()
+            i = 1
+            for disposed in disposedList.list:
+                newLevel.addItem(MenuLevel(
+                    id=str(i),
+                    title='Disposed sample {} '.format(str(disposed.id)),
+                    onSelect=callDispose(disposed.id)
+                ))
+                i += 1
+            return level
         newLevel = MenuLevel(
             welcomeMessage='We have these expired blood in the storehouse:',
-            inputPrompt='Select one of the blood you want to dispose: '
+            inputPrompt='Select one of the blood you want to dispose: ',
+            onRefresh = lambda: refresh(newLevel)
         )
 
-        i = 1
-        for disposed in disposedList.list:
-            newLevel.addItem(MenuLevel(
-                id=str(i),
-                title='Disposed sample {} '.format(str(disposed.id)),
-                onSelect=callDispose(disposed.id) 
-            ))
-            i += 1
+
 
         newLevel.run()
 
