@@ -9,46 +9,54 @@ from ScreanCleaner import ScreanCleaner
 class Doctor():
 
     def selectReserve(self):
-        reservedList = ReservedBloodList()
-        reservedList.sortByExpiryDate()
-        callReserve = lambda id: lambda: self.removeReservation(id)
-
+        def refresh(level):
+            level.emptyItems()
+            reservedList = ReservedBloodList()
+            reservedList.sortByExpiryDate()
+            callReserve = lambda id: lambda: self.removeReservation(id)
+            i = 1
+            for reserved in reservedList.list:
+                expirationString = datetime.fromtimestamp(reserved.expiration).strftime('%d-%m-%Y %H:%M')
+                newLevel.addItem(MenuLevel(
+                    id=str(i),
+                    title='Blood ID: {} | Expiration Date: {}'.format(str(reserved.id), expirationString),
+                    onSelect=callReserve(reserved.id)
+                ))
+                i += 1
+            return level
 
         newLevel = MenuLevel(
             welcomeMessage = 'We have these blood reserved in the storehouse',
-            inputPrompt='Select the blood reservation you want to cancel: '
-
+            inputPrompt='Select the blood reservation you want to cancel: ',
+            onRefresh = lambda: refresh(newLevel)
         )
-        i = 1
-        for reserved in reservedList.list:
-            expirationString = datetime.fromtimestamp(reserved.expiration).strftime('%d-%m-%Y %H:%M')
-            newLevel.addItem(MenuLevel(
-                id = str(i),
-                title='Blood ID: {} | Expiration Date: {}'.format(str(reserved.id), expirationString),
-                onSelect=callReserve(reserved.id)
-            ))
-            i += 1
+
         newLevel.run()
 
     def select(self):
-        callReserve = lambda id: lambda: self.reserveBlood(id)
-        testedList = TestedBloodList()
-        testedList.sortByExpiryDate()
+        def refresh(level):
+            level.emptyItems()
+            callReserve = lambda id: lambda: self.reserveBlood(id)
+            testedList = TestedBloodList()
+            testedList.sortByExpiryDate()
 
+            i = 1
+            for tested in testedList.list:
+                expirationString = datetime.fromtimestamp(tested.expiration).strftime('%d-%m-%Y %H:%M')
+                newLevel.addItem(MenuLevel(
+                    id=str(i),
+                    title='Blood ID: {} | Expiration Date: {}'.format(str(tested.id), expirationString),
+                    onSelect=callReserve(tested.id)
+                ))
+                i += 1
+
+            return level
         newLevel = MenuLevel(
             welcomeMessage='We have these tested blood in the storehouse:',
-            inputPrompt='Select one of the blood you want to reserve: '
+            inputPrompt='Select one of the blood you want to reserve: ',
+            onRefresh=lambda: refresh(newLevel)
         )
 
-        i = 1
-        for tested in testedList.list:
-            expirationString = datetime.fromtimestamp(tested.expiration).strftime('%d-%m-%Y %H:%M')
-            newLevel.addItem(MenuLevel(
-                id=str(i),
-                title='Blood ID: {} | Expiration Date: {}'.format(str(tested.id), expirationString),
-                onSelect=callReserve(tested.id)
-            ))
-            i += 1
 
         newLevel.run()
 

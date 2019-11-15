@@ -25,7 +25,7 @@ class StorehouseManager(Role):
             newLevel.addItem(MenuLevel(
                 id=str(i),
                 title='Disposed sample {} '.format(str(disposed.id)),
-                onSelect=callDispose(disposed.id) 
+                onSelect=callDispose(disposed.id)
             ))
             i += 1
 
