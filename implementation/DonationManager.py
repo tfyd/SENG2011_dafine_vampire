@@ -29,9 +29,13 @@ class DonationManager(Role):
                 if retrievalString != 'q':
                     retrievalDate = datetime.strptime(retrievalString, '%d/%m/%Y %H:%M')
                     retrievalDate = retrievalDate.timestamp()
+                    if retrievalDate >= time.time():
+                        BeautifulPrint.error("Please insert a date in the past.")
+                        BeautifulPrint.error("Insert 'q' to go back")
+                        continue
                     newBlood = UntestedBlood(int(time.time()), retrievalDate)
                     UntestedBloodList().addBlood(newBlood)
-                    BeautifulPrint.success('Insert ' + str(newBlood) + ' succeeded. \nPlease insert the blood to the storehouse')
+                    BeautifulPrint.success('Insert ' + str(newBlood) + ' succeeded. \nPlease take the sample to the storehouse')
                     input('Press enter to go back...')
                     ScreanCleaner.clear() # clear the screen 
                 else:
@@ -41,9 +45,6 @@ class DonationManager(Role):
                 break
             except ValueError:
                 BeautifulPrint.error("Please insert the date in [DD/MM/YYYY HH:mm] format")
-                BeautifulPrint.error("Insert 'q' to go back")
-            except OSError:
-                BeautifulPrint.error("Please not to insert a date in the past")
                 BeautifulPrint.error("Insert 'q' to go back")
 
     def viewBlood(self):

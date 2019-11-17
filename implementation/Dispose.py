@@ -2,6 +2,7 @@ from TestedBloodList import TestedBloodList
 from DisposedBlood import DisposedBlood
 from DisposedBloodList import DisposedBloodList
 from EmailSender import EmailSender
+from BeautifulPrint import BeautifulPrint
 import threading
 import time
 
@@ -10,23 +11,27 @@ class Dispose():
     _haveSentEmail = []
 
     def checkExp(self, blood):
-        if blood.expiration < time.time():
-            return True
+        return blood.expiration < time.time()
 
     def dispose(self):
         tested = TestedBloodList()
         disposed = []
-        
+        toBeRemoved = []
+
         for blood in tested.list:
+            print(str(blood))
             if self.checkExp(blood):
-                print("blood " + str(blood.expiration) + " is expired")
-                DisposedBloodList().addBlood(DisposedBlood(blood.id))
-                tested.extractBlood(blood.id)
+                BeautifulPrint.warning("Blood " + str(blood.id) + " is expired")
+                toBeRemoved.append(blood)
                 disposed.append(str(blood.id))
+                DisposedBloodList().addBlood(DisposedBlood(blood.id))
+
+        for blood in toBeRemoved:
+            tested.extractBlood(blood.id)
 
         insufficientBloodList = tested.insufficentBloodList()
 
-        if not all(elem in type(self)._haveSentEmail  for elem in insufficientBloodList) : #TODO can be vertified
+        if not all(elem in type(self)._haveSentEmail  for elem in insufficientBloodList) :
             sender = EmailSender()
             thread = threading.Thread(target=sender.detailedEmail, args=[insufficientBloodList])
             thread.daemon = True 
@@ -35,9 +40,8 @@ class Dispose():
             
         type(self)._haveSentEmail = insufficientBloodList
 
-        disposedString = "\n".join(disposed)
+        disposedString = ", ".join(disposed)
         if len(disposed) != 0:
-            print('Blood sample \n{}\nhas been added to disposed blood list.'.format(disposedString))
-            print('this message just for debug')
+            BeautifulPrint.warning('Blood sample {} has been added to disposed blood list, pending to be disposed'.format(disposedString))
     
 

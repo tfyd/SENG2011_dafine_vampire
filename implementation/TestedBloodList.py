@@ -8,6 +8,7 @@ class TestedBloodList(BloodList):
     jsonfile = './dataset/TestedBlood.json'
     # Using 3 as a dummy value, replace with real value later
     criticalValue = 3
+    list = []
 
     def __init__(self):
         super().__init__()
@@ -17,6 +18,7 @@ class TestedBloodList(BloodList):
             defaultValue=[]
         )
         for blood in data:
+            print(blood['id'])
             self.list.append(TestedBlood(
                 id=blood['id'],
                 retrievalDate=blood['retrievalDate'],

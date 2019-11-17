@@ -10,6 +10,7 @@ class Doctor():
 
     def selectReserve(self):
         def refresh(level):
+            Dispose().dispose()
             level.emptyItems()
             reservedList = ReservedBloodList()
             reservedList.sortByExpiryDate()
@@ -35,6 +36,7 @@ class Doctor():
 
     def select(self):
         def refresh(level):
+            Dispose().dispose()
             level.emptyItems()
             callReserve = lambda id: lambda: self.reserveBlood(id)
             testedList = TestedBloodList()
@@ -104,6 +106,7 @@ class Doctor():
         ScreanCleaner.clear()
 
     def viewBloodType(self):
+        Dispose().dispose()
         validBlood =  ['O', 'O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
         checkedBloodType = None
         while checkedBloodType is None:
@@ -157,8 +160,8 @@ class Doctor():
 
     def removeReservation(self, id):
         bloodToRemove = ReservedBloodList().extractBlood(id)
-        BeautifulPrint.error('Blood reservation has been removed.')
+        BeautifulPrint.success('Blood reservation has been removed.')
         TestedBloodList().addBlood(bloodToRemove)
-        BeautifulPrint.success('Blood has been added back to Tested List')
+        Dispose().dispose()
         input('Press enter to go back...')
         ScreanCleaner.clear()

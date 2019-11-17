@@ -101,6 +101,10 @@ class Tester(Role):
                 ScreanCleaner.clear()
                 expiration = datetime.strptime(expirationString, '%d/%m/%Y %H:%M')
                 expiration = expiration.timestamp()
+                if expiration < time.time():
+                    BeautifulPrint.error("Please insert a date in the future")
+                    expiration = None
+                    continue
             except:
                 expiration = None
                 ScreanCleaner.clear()

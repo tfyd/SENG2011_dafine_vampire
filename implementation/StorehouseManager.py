@@ -11,12 +11,12 @@ import time
 class StorehouseManager(Role):
     
     def select(self):
-
         def refresh(level):
             level.emptyItems()
             callDispose = lambda id: lambda: self.dispose(id)
             Dispose().dispose()
             disposedList = DisposedBloodList()
+            
             i = 1
             for disposed in disposedList.list:
                 newLevel.addItem(MenuLevel(
@@ -27,24 +27,11 @@ class StorehouseManager(Role):
                 i += 1
             return level
 
-        callDispose = lambda id: lambda: self.dispose(id)
-        Dispose().dispose()
-        disposedList = DisposedBloodList()
-
         newLevel = MenuLevel(
             welcomeMessage='We have these expired blood in the storehouse:',
             inputPrompt='Select one of the blood you want to dispose: ',
             onRefresh=lambda: refresh(newLevel)
         )
-
-        i = 1
-        for disposed in disposedList.list:
-            newLevel.addItem(MenuLevel(
-                id=str(i),
-                title='Disposed sample {} '.format(str(disposed.id)),
-                onSelect=callDispose(disposed.id)
-            ))
-            i += 1
 
         newLevel.run()
 
@@ -152,10 +139,10 @@ class StorehouseManager(Role):
             welcomeMessage='You are a storehouse manager now.',
             inputPrompt='What do you want to do? '
         )
-        thisLevel.addItem(MenuLevel('1', 'Dispose Blood', onSelect=self.select))
-        thisLevel.addItem(MenuLevel('2', 'View All Blood', onSelect = self.viewBlood))
-        thisLevel.addItem(MenuLevel('3', 'Dispose All Blood', onSelect = self.disposeAll))
-        thisLevel.addItem(MenuLevel('4', 'View Current Blood Stock', onSelect = self.viewBloodStockCurrent))
-        thisLevel.addItem(MenuLevel('5', 'View Future Blood Stock', onSelect = self.viewBloodStockFuture))
+        thisLevel.addItem(MenuLevel('1', 'Dispose blood', onSelect=self.select))
+        thisLevel.addItem(MenuLevel('2', 'View storehouse summary', onSelect = self.viewBlood))
+        thisLevel.addItem(MenuLevel('3', 'Dispose all blood', onSelect = self.disposeAll))
+        thisLevel.addItem(MenuLevel('4', 'View current blood stock', onSelect = self.viewBloodStockCurrent))
+        thisLevel.addItem(MenuLevel('5', 'View future blood stock', onSelect = self.viewBloodStockFuture))
 
         thisLevel.select()
