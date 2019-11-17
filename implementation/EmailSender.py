@@ -7,8 +7,8 @@ class EmailSender():
         self.port = 465  # For SSL
         self.smtp_server = "smtp.gmail.com"
         self.sender_email = "vampirebloodproject@gmail.com" 
-        self.storehouse_manager_email = "your_email@gmail.com"  # Enter your address 
-        self.donor_manager_email = "your_email@gmail.com"  # Enter your address 
+        self.storehouse_manager_email = "happysheepqaq@gmail.com"  # Enter your address 
+        self.donor_manager_email = "happysheepqaq@gmail.com"  # Enter your address 
         self.password = "transfusion"
         self.message = """\
             Insufficient Blood Storage

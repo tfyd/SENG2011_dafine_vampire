@@ -29,7 +29,8 @@ class Dispose():
         if not all(elem in type(self)._haveSentEmail  for elem in insufficientBloodList) : #TODO can be vertified
             sender = EmailSender()
             thread = threading.Thread(target=sender.detailedEmail, args=[insufficientBloodList])
-            thread.daemon = True                            
+            thread.daemon = True 
+            # comment out next line if you don't want Email                           
             thread.start() 
             
         type(self)._haveSentEmail = insufficientBloodList
