@@ -79,11 +79,11 @@ class ReservedBloodList
                 {
                     list[j - 1] := list[j];
                 }
+                upto := upto - 1;
                 break;
             }
             i := i + 1;
         }
 
-        upto := upto - 1;
     }
 }
