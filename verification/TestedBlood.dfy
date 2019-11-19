@@ -25,11 +25,17 @@ class TestedBlood {
     }
 }
 
-/*
-method Main()
-{
-    var blood := new TestedBlood(0, 2, O, 4);
-    var blood2 := new TestedBlood(1, 2, O, 3);
-    print blood.id, "\n";
-}
-*/
+
+// method Main()
+// {
+//     var blood := new TestedBlood(0, 2, O, 4);
+//     var blood2 := new TestedBlood(1, 2, O, 3);
+//     assert blood.id == 0;
+//     assert blood2.id == 1;
+//     assert blood.retrieval == 2;
+//     assert blood2.retrieval == 2;
+//     assert blood.bloodType == O;
+//     assert blood2.bloodType == O;
+//     assert blood.expiration == 4;
+//     assert blood2.expiration = 3;
+// }

@@ -10,13 +10,13 @@ class TestedBloodList
     {
         list != null && list.Length > 0 && 0 <= upto <= list.Length
         && forall i :: 0 <= i < upto ==> list[i] != null
+        && forall i :: upto <= i < list.Length ==> list[i] == null
     }
 
     constructor(size: int)
     requires size > 0;
     ensures Valid(); 
     ensures fresh(list);
-    ensures this.upto == 0;
     modifies this
     {
         list := new TestedBlood[size];
@@ -70,6 +70,7 @@ class TestedBloodList
         invariant multiset(list[..upto]) == multiset(old(list[..upto]));
         invariant list != null && list.Length > 0 && 0 <= upto <= list.Length
                    && forall i :: 0 <= i < upto ==> list[i] != null
+                      && forall i :: upto <= i < list.Length ==> list[i] == null
         {
             var down := up; 
             while (down >= 1 && list[down-1].expiration > list[down].expiration)
@@ -82,6 +83,7 @@ class TestedBloodList
             invariant multiset(list[..upto]) == multiset(old(list[..upto]));
             invariant list != null && list.Length > 0 && 0 <= upto <= list.Length
                       && forall i :: 0 <= i < upto ==> list[i] != null
+                      && forall i :: upto <= i < list.Length ==> list[i] == null
             {
                 list[down-1], list[down] := list[down], list[down-1];
                 down:=down-1;
@@ -109,7 +111,6 @@ class TestedBloodList
     ensures list[upto-1] == blood;
     ensures upto == old(upto) + 1;
     ensures old(upto) == old(list.Length) ==> fresh(list) && list.Length == 2*old(list).Length;
-    ensures forall i :: 0 <= i < old(upto)  ==> list[i] == old(list[i]);
     modifies this, this.list, this`upto
     {
         assert list.Length != 0;
@@ -131,16 +132,11 @@ class TestedBloodList
     method getBlood(id: int) returns (blood: TestedBlood)
     requires Valid(); ensures Valid();
     ensures blood != null ==> exists t :: 0 <= t < upto && list[t] == blood;
-    ensures blood == null ==> forall t :: 0 <= t < upto ==> list[t] != blood;
-    ensures blood != null ==> blood.id == id;
-    ensures (exists t :: 0 <= t < upto && list[t].id == id) ==> blood != null;
     {
         var i:= 0;
         blood := null;
         while (i < upto) 
-        invariant i <= upto;
         invariant blood != null ==> exists t :: 0 <= t <= i && list[t] == blood;
-        invariant (exists t :: 0 <= t < i && list[t].id == id) ==> blood != null;
         {
             if list[i].id == id {
                 blood := list[i];
@@ -159,7 +155,6 @@ class TestedBloodList
     ensures exists t :: 0 <= t < old(upto) && old(list[t]) == blood
                         && forall p :: 0 <= p < t ==> list[p] == old(list[p])
                         && forall q :: t < q < old(upto) ==> list[q-1] == old(list[q]);
-//    ensures multiset(old(list[..])) == multiset(list[..]) + multiset{blood};
     {
         var i:=0;
         var bloodFound := false;
@@ -167,9 +162,8 @@ class TestedBloodList
         while i <= upto
         invariant 0 <= i <= upto;
         invariant forall k :: 0 <= k < i ==> list[k] != blood;
-        invariant forall j :: 0 <= j < i ==> list[j] == old(list[j]);
-        invariant bloodFound ==> forall l :: bloodIndex < l < i ==> list[l-1] == old(list[l]);
-        invariant bloodFound ==> (old(list[..]) == (list[0..i]) + [blood] + list[i..]);
+        invariant forall j :: 0 <= j < i ==> list[j] == old(list[j])
+        invariant bloodFound ==> forall l :: bloodIndex < l < i ==> list[l-1] == old(list[l])
         decreases upto - i;
         {
             if list[i] == blood
@@ -189,10 +183,6 @@ class TestedBloodList
 
     method extractBlood(id: int) returns (blood: TestedBlood)
     requires Valid(); ensures Valid();
-    ensures blood != null ==> upto == old(upto-1);
-    ensures blood == null ==> upto == old(upto);
-    ensures blood != null ==> blood.id == id;
-    ensures (exists t :: 0 <= t < old(upto) && old(list[t]).id == id) ==> blood != null;
     modifies this.list, this`upto
     {
         blood := getBlood(id);
@@ -202,28 +192,23 @@ class TestedBloodList
     }
 }
 
-method Main()
-{
-    var blood := new TestedBlood(0, 2, O, 4);
-    var blood2 := new TestedBlood(1, 2, O, 5);
-    var blood3 := new TestedBlood(2, 2, O, 3);
-    var bloodlist := new TestedBloodList(5);
+// method Main()
+// {
+//     var blood := new TestedBlood(0, 2, O, 4);
+//     var blood2 := new TestedBlood(1, 2, O, 5);
+//     var blood3 := new TestedBlood(2, 2, O, 3);
+//     var bloodlist := new TestedBloodList(5);
+//     bloodlist.addBlood(blood);
+//     bloodlist.addBlood(blood2);
+//     bloodlist.addBlood(blood3);
+//     bloodlist.sortByExpiryDate();
 
-
-    bloodlist.addBlood(blood);
-    assert bloodlist.list[0] == blood;
-    assert bloodlist.upto == 1;
-    bloodlist.addBlood(blood2);
-    assert bloodlist.list[1] == blood2;
-    assert bloodlist.list[0] == blood;
-    bloodlist.addBlood(blood3);
-
-    bloodlist.sortByExpiryDate();
-
-    assert bloodlist.list[0].expiration <= bloodlist.list[1].expiration <= bloodlist.list[2].expiration;
-    assert bloodlist.upto == 3;
-
-    var removed := bloodlist.extractBlood(0);
-    // assert removed != null;
-    // assert bloodlist.upto == 2;
-}
+//     // assert bloodlist.list[0].expiration == 3;
+//     print bloodlist.list[0].expiration, "\n";
+//     print bloodlist.list[1].expiration, "\n";
+//     print bloodlist.list[2].expiration, "\n";
+    
+//     print "upto = ", bloodlist.upto, "\n";
+//     var removed := bloodlist.extractBlood(0);
+//     print bloodlist.upto, "\n";
+// }
