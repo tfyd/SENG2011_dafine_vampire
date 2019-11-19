@@ -7,13 +7,11 @@
 Run the `main.py` in this directory by executing `python3 ./main.py` or just `./main.py`
 
 ### Dataset
-We use json file to store the lists. Files are stored in `./dataset/` folders. Currently, we have these files: **(Not garantee to exist)**
-+ `UntestedBlood.json`
-+ `AvailableBlood.json`
-+ `PendingWastedBlood.json`
+We use json file to persist the lists. Files are stored in `./dataset/` folders. Note that data files are **not garantee to exist**. Program should be able to handle this.
 
+## Front-end related
 ### Levelised Menu
 Check `MenuLevel.py` file. Run it and see what happened!
 
 ### Beautiful Print
-Check `Beautiful.py` file. Run it and see what happened!
+Check `BeautifulPrint.py` file. Run it and see what happened!
