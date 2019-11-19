@@ -22,18 +22,27 @@ class DafnyList():
                 break
             i = i + 1
     
-    def getList(self):
-        return self._list
+    @property
+    def list(self):
+        return self._list[:self._upto]
+
+    @list.setter
+    def list(self, newlist):
+        newlength = len(newlist)
+        self._list = DafnyList(newlength+1) # make sure length not equals to 0
+        for elem in newlist:
+            self.append(elem)
 
     def __str__(self):
         return " ".join(self._list[:self._upto])
     
 
-
-test = DafnyList(2)
-test.append("hi")
-test.append("test")
-test.append("world")
-print(test)
-test.remove("world")
-print(test)
+if __name__ == '__main__':
+    # for testing only
+    test = DafnyList(2)
+    test.append("hi")
+    test.append("test")
+    test.append("world")
+    print(test)
+    test.remove("world")
+    print(test)
