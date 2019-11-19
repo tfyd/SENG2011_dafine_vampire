@@ -118,6 +118,7 @@ class Doctor():
             else:
                 BeautifulPrint.error('Please enter a valid blood type.')
         testedList = TestedBloodList()
+        testedList.sortByExpiryDate()
         counter = 0
         for blood in testedList.list:
             if blood.type == checkedBloodType:
