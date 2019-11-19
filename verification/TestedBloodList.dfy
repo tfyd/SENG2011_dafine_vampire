@@ -126,43 +126,66 @@ class TestedBloodList
 
     }
 
+    method getBlood(id: int) returns (blood: TestedBlood)
+    requires Valid(); ensures Valid();
+    ensures blood != null ==> exists t :: 0 <= t < upto && list[t] == blood;
+    {
+        var i:= 0;
+        blood := null;
+        while (i < upto) 
+        invariant blood != null ==> exists t :: 0 <= t <= i && list[t] == blood;
+        {
+            if list[i].id == id {
+                blood := list[i];
+                break;
+            }
+            i := i + 1;
+        }
+    }
     
-    method extractBlood(id: int) returns (bloodFound: bool, blood: TestedBlood)
-    ensures Valid(); requires Valid();
+    method removeBlood(blood: TestedBlood)
+    requires Valid(); ensures Valid();
+    modifies this.list, this`upto
     requires upto > 0;
-    ensures bloodFound ==> upto == old(upto) - 1;
-    ensures bloodFound ==> exists t :: 0 <= t < old(upto) && old(list[t]) == blood
+    requires exists t :: 0 <= t < upto && list[t] == blood;
+    ensures upto == old(upto) - 1;
+    ensures exists t :: 0 <= t < old(upto) && old(list[t]) == blood
                         && forall p :: 0 <= p < t ==> list[p] == old(list[p])
                         && forall q :: t < q < old(upto) ==> list[q-1] == old(list[q]);
-    ensures bloodFound ==> blood.id == id;
-    modifies this.list, this`upto;
     {
-        bloodFound := false;
-        blood := null;
         var i:=0;
+        var bloodFound := false;
         var bloodIndex := -1;
-        while i < upto
+        while i <= upto
         invariant 0 <= i <= upto;
         invariant forall k :: 0 <= k < i ==> list[k] != blood;
         invariant forall j :: 0 <= j < i ==> list[j] == old(list[j])
         invariant bloodFound ==> forall l :: bloodIndex < l < i ==> list[l-1] == old(list[l])
         decreases upto - i;
         {
-            if list[i].id == id
+            if list[i] == blood
             {
                 bloodFound := true;
                 bloodIndex := i;
-                blood := list[i];
                 forall(j | i < j < upto)
                 {
                     list[j - 1] := list[j];
                 }
+                upto := upto - 1;
                 break;
             }
             i := i + 1;
         }
+    }
 
-        upto := upto - 1;
+    method extractBlood(id: int) returns (blood: TestedBlood)
+    requires Valid(); ensures Valid();
+    modifies this.list, this`upto
+    {
+        blood := getBlood(id);
+        if(blood != null){
+            removeBlood(blood);
+        }
     }
 }
 
@@ -183,6 +206,6 @@ method Main()
     print bloodlist.list[2].expiration, "\n";
     
     print "upto = ", bloodlist.upto, "\n";
-    var find, removed := bloodlist.extractBlood(0);
+    var removed := bloodlist.extractBlood(0);
     print bloodlist.upto, "\n";
 }
