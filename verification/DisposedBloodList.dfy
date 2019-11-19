@@ -16,7 +16,7 @@ class DisposedBloodList
     requires size > 0;
     ensures Valid(); 
     ensures fresh(list);
-    modifies this, this.list, this`upto
+    modifies this
     {
         list := new DisposedBlood[size];
         upto := 0;
@@ -51,7 +51,6 @@ class DisposedBloodList
     
     method extractBlood(id: int) returns (bloodFound: bool, blood: DisposedBlood)
     ensures Valid(); requires Valid();
-    requires upto > 0;
     ensures bloodFound ==> upto == old(upto) - 1;
     ensures bloodFound ==> exists t :: 0 <= t < old(upto) && old(list[t]) == blood
                         && forall p :: 0 <= p < t ==> list[p] == old(list[p])
