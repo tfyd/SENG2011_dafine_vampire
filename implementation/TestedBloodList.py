@@ -18,7 +18,7 @@ class TestedBloodList(BloodList):
             defaultValue=[]
         )
         for blood in data:
-            print(blood['id'])
+            # print(blood['id'])
             self.list.append(TestedBlood(
                 id=blood['id'],
                 retrievalDate=blood['retrievalDate'],
