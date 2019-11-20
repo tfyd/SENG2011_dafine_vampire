@@ -16,7 +16,7 @@ class UntestedBloodList
     requires size > 0;
     ensures Valid(); 
     ensures fresh(list);
-    modifies this, this.list, this`upto
+    modifies this
     {
         list := new UntestedBlood[size];
         upto := 0;
