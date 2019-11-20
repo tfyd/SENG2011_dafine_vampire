@@ -1,12 +1,12 @@
 include "TestedBlood.dfy"
 
-    predicate Sorted(list: array<TestedBlood>,low:int, high:int)
-    requires list != null 
-    requires 0 <= high <= list.Length
-    requires 0<=low<=high
-    requires forall i :: low <= i < high ==> list[i] != null
-    reads list, set m | low <= m < high :: list[m]`expiration
-    { forall j,k:: low<=j<k<high ==> list[j].expiration<=list[k].expiration }
+predicate Sorted(list: array<TestedBlood>,low:int, high:int)
+requires list != null 
+requires 0 <= high <= list.Length
+requires 0<=low<=high
+requires forall i :: low <= i < high ==> list[i] != null
+reads list, set m | low <= m < high :: list[m]`expiration
+{ forall j,k:: low<=j<k<high ==> list[j].expiration<=list[k].expiration }
 
 class TestedBloodList
 {

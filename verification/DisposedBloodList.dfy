@@ -16,6 +16,7 @@ class DisposedBloodList
     requires size > 0;
     ensures Valid(); 
     ensures fresh(list);
+    ensures this.upto == 0;
     modifies this
     {
         list := new DisposedBlood[size];
@@ -30,6 +31,7 @@ class DisposedBloodList
     ensures list[upto-1] == blood;
     ensures upto == old(upto) + 1;
     ensures old(upto) == old(list.Length) ==> fresh(list) && list.Length == 2*old(list).Length;
+    ensures forall i :: 0 <= i < old(upto)  ==> list[i] == old(list[i]);    
     modifies this, this.list, this`upto
     {
         assert list.Length != 0;
@@ -51,10 +53,17 @@ class DisposedBloodList
     
     method extractBlood(id: int) returns (bloodFound: bool, blood: DisposedBlood)
     ensures Valid(); requires Valid();
+    requires upto > 0;
+    ensures !bloodFound  ==> upto == old(upto);
+    ensures !bloodFound ==> old(list[0..upto]) == list[0..upto];
+    ensures bloodFound ==> (exists t :: 0 <= t < old(upto) && old(list[t]) == blood
+                    && (forall k :: 0 <= k < t ==> list[k] == old(list[k]))
+                    && (forall q :: t < q < old(upto) ==> list[q-1] == old(list[q]))
+                    );
+    ensures blood != null ==> blood.id == id;
+    ensures (exists t :: 0 <= t < old(upto) && old(list[t]).id == id) ==> bloodFound;
+    ensures (forall t :: 0 <= t < old(upto) ==> old(list[t]).id != id) ==> !bloodFound;
     ensures bloodFound ==> upto == old(upto) - 1;
-    ensures bloodFound ==> exists t :: 0 <= t < old(upto) && old(list[t]) == blood
-                        && forall p :: 0 <= p < t ==> list[p] == old(list[p])
-                        && forall q :: t < q < old(upto) ==> list[q-1] == old(list[q]);
     ensures bloodFound ==> blood.id == id;
     modifies this.list, this`upto;
     {
@@ -66,6 +75,8 @@ class DisposedBloodList
         invariant 0 <= i <= upto;
         invariant forall k :: 0 <= k < i ==> list[k] != blood;
         invariant forall j :: 0 <= j < i ==> list[j] == old(list[j])
+        invariant (exists t :: 0 <= t < i && list[t].id == id) ==> bloodFound;
+        invariant forall t :: 0 <= t < old(upto) && old(list[t])!= blood ==> (exists k :: 0 <= k < upto && old(list[t]) == list[k]);
         invariant bloodFound ==> forall l :: bloodIndex < l < i ==> list[l-1] == old(list[l])
         decreases upto - i;
         {
@@ -85,4 +96,13 @@ class DisposedBloodList
         }
 
     }
+}
+
+method Main()
+{
+    var blood := new DisposedBlood(0);
+    var blood2 := new DisposedBlood(1);
+    var blood3 := new DisposedBlood(2);
+    assert blood.id == 0;
+    assert blood2.id == 1;
 }
