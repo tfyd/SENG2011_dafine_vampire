@@ -36,6 +36,9 @@ class TestedBloodList
     // * Got stuck on verifying this one
     method numOfStorageCurrent() returns (summary: multiset<BloodType>)
     requires Valid(); ensures Valid();
+    ensures upto = old(upto);
+    ensures list = old(list);
+    
     {
         var types: seq<BloodType> := []; 
         var i := 0;
