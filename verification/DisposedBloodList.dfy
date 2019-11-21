@@ -33,7 +33,7 @@ class DisposedBloodList
         upto := 0;
     }
 
-
+    // Correspond to DisposedBloodList.py::addBlood() -- inherited from BloodList
     method addBlood(blood: DisposedBlood)
     ensures Valid(); requires Valid();
     requires UniqueId(); ensures UniqueId();
@@ -63,6 +63,7 @@ class DisposedBloodList
         list[upto], upto := blood, upto + 1;
     }
 
+    // Correspond to DisposedBloodList.py::getBlood() -- inherited from BloodList
     method getBlood(id: int) returns (blood: DisposedBlood)
     requires Valid(); ensures Valid();
     requires UniqueId(); ensures UniqueId();
@@ -92,6 +93,7 @@ class DisposedBloodList
         }
     }
 
+    // Correspond to DisposedBloodList.py::removeBlood() -- inherited from BloodList
     method removeBlood(blood: DisposedBlood)
     requires Valid(); ensures Valid();
     requires UniqueId(); ensures UniqueId();
@@ -135,6 +137,7 @@ class DisposedBloodList
         }
     }
     
+    // Correspond to DisposedBloodList.py::extractBlood() -- inherited from BloodList
     method extractBlood(id: int) returns (blood: DisposedBlood)
     requires Valid(); ensures Valid();
     requires UniqueId(); ensures UniqueId();

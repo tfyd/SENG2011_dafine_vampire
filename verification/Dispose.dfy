@@ -12,7 +12,7 @@ reads blood;
 {
     blood.expiration < timenow
 }
-
+/*
 // go through the list, check if the blood is exp
 // if exp, move from the list
 // Correspond to Dispose::dispose()
@@ -39,10 +39,9 @@ method dispose(testedlist: TestedBloodList, disposedlist: DisposedBloodList, tim
     ensures disposedlist.UniqueId();
     ensures testedlist != null;
     ensures disposedlist != null;
-    // ensure all blood in the list is healthy
     // ensures forall j :: 0 <= j < testedlist.upto ==> testedlist.list[j].expiration > timenow;
 
-    // ensure all bloods remove from tested list is inserted to disposedBlood list
+
     // ensures forall j :: 0 <= j < old(testedlist.upto) 
     //         && (forall i :: 0 <= i < testedlist.upto 
     //         && old(testedlist).list[j].id != testedlist.list[i].id) 
@@ -83,6 +82,7 @@ method dispose(testedlist: TestedBloodList, disposedlist: DisposedBloodList, tim
     invariant forall id :: id in c  ==> (forall k :: 0 <= k < disposedlist.upto ==> id != disposedlist.list[k].id);
     invariant forall id :: (id in old(c) && ! (id in c)) ==> (forall j :: 0 <= j < testedlist.upto ==> testedlist.list[j].id != id);
     invariant c <= toBeRemoved;
+
     // invariant forall id :: id in c ==> (exists k :: 0 <= k < testedlist.upto
     //                                              && testedlist.list[k].id == id 
     //                                              && testedlist.list[k].expiration <= timenow);
@@ -99,4 +99,13 @@ method dispose(testedlist: TestedBloodList, disposedlist: DisposedBloodList, tim
         disposedlist.addBlood(newlydisposed);
         c := c - { y };
     }
-}
+    assert h == toBeRemoved;
+}*/
+
+// var blood := testedlist.extractBlood(testedlist.list[i].id);
+// var newlydisposed := new DisposedBlood(blood.id);
+// disposedlist.addBlood(newlydisposed);
+
+        // invariant 0 <= i <= testedlist.list.Length;
+        // invariant forall j :: 0 <= j < i ==> testedlist.list[j].expiration > timenow;
+        // decreases testedlist.list.Length - i;
