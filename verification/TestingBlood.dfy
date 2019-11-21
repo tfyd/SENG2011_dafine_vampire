@@ -12,7 +12,7 @@ class TestingBlood {
     constructor (bloodid: int, rdate: int, sdate: int)
     requires sdate > rdate
     ensures id == bloodid && rdate == retrieval && sdate == startTest
-    modifies this
+    modifies this`id,  this`retrieval, this`startTest
     ensures Valid()
     {
         id := bloodid;
