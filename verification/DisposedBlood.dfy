@@ -1,4 +1,4 @@
-datatype BloodType = O | OP | OM | AP | AM | BP | BM | ABP | ABM
+datatype DisposedBloodType = O | OP | OM | AP | AM | BP | BM | ABP | ABM
 // Python Type:      O | O+ | O- | A+ | A- | B+ | B- | AB+ | AB-
 class DisposedBlood {
     var id: int;

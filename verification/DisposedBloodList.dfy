@@ -46,6 +46,7 @@ class DisposedBloodList
     ensures old(upto) == old(list.Length) ==> fresh(list) && list.Length == 2*old(list).Length;
     ensures forall i :: 0 <= i < old(upto)  ==> list[i] == old(list[i]);    
     modifies this, this.list, this`upto
+    ensures list == old(list) || fresh(list);
     {
         assert list.Length != 0;
         if upto == list.Length
@@ -73,7 +74,7 @@ class DisposedBloodList
     ensures multiset(old(list[0..old(upto)])) == multiset(list[0..upto]);
     ensures forall t :: 0 <= t < upto ==> list[t] == old(list[t]);
     ensures upto == old(upto);
-
+    ensures list == old(list);
     {
         var i:= 0;
         blood := null;
@@ -104,6 +105,7 @@ class DisposedBloodList
                     && (forall q :: t < q < old(upto) ==> list[q-1] == old(list[q]))
                     );
     ensures (forall t :: 0 <= t < upto ==> list[t].id != blood.id);
+    ensures list == old(list);
     {
         var i:=0;
         var bloodFound := false;
@@ -147,6 +149,7 @@ class DisposedBloodList
     ensures blood != null ==> blood.id == id;
     ensures (exists t :: 0 <= t < old(upto) && old(list[t]).id == id) ==> blood != null;
     ensures (forall t :: 0 <= t < old(upto) ==> old(list[t]).id != id) ==> blood == null;
+    ensures list == old(list);
     modifies this.list, this`upto
     {
         blood := getBlood(id);

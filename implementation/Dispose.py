@@ -15,19 +15,18 @@ class Dispose():
 
     def dispose(self):
         tested = TestedBloodList()
-        disposed = []
-        toBeRemoved = []
+        disposed = [] # print out message
+        toBeRemoved = {}
 
         for blood in tested.list:
-            print(str(blood))
             if self.checkExp(blood):
                 BeautifulPrint.warning("Blood " + str(blood.id) + " is expired")
-                toBeRemoved.append(blood)
+                toBeRemoved.add(str(blood.id))
                 disposed.append(str(blood.id))
-                DisposedBloodList().addBlood(DisposedBlood(blood.id))
 
-        for blood in toBeRemoved:
-            tested.extractBlood(blood.id)
+        for iD in toBeRemoved:
+            tested.extractBlood(iD)
+            DisposedBloodList().addBlood(iD)
 
         insufficientBloodList = tested.insufficentBloodList()
 
