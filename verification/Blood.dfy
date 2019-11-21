@@ -1,3 +1,4 @@
+// match python abstract class Blood
 class Blood {
     var id: int;
 

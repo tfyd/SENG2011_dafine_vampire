@@ -43,15 +43,16 @@ class TestedBloodList
         upto := 0;
     }
 
+    // Correspond to TestedBloodList.py::testedBloodNum()
     // Print for each of blood type
     // Instead of print, in dafny, we return the multiset
     // * Got stuck on verifying this one
-    method numOfStorageCurrent() returns (summary: multiset<TestedBloodType>)
+    method numOfStorageCurrent() returns (summary: multiset<BloodType>)
     requires Valid(); ensures Valid();
     requires UniqueId(); ensures UniqueId();
     ensures list == old(list);
     {
-        var types: seq<TestedBloodType> := []; 
+        var types: seq<BloodType> := []; 
         var i := 0;
         while (i < upto) 
             invariant 0 <= i <= upto;
@@ -62,7 +63,7 @@ class TestedBloodList
         summary := multiset(types);
     }
 
-
+    // Correspond to TestedBloodList.py::testedBloodNum()
     method testedBloodNum() returns (num: int)
     ensures Valid(); requires Valid();
     requires UniqueId(); ensures UniqueId();
@@ -72,9 +73,9 @@ class TestedBloodList
         num := upto;
     }
     
-
+    // Correspond to TestedBloodList.py::sortByExpiryDate()
     method sortByExpiryDate()
-    requires list != null // 1.9.7
+    requires list != null 
     requires list.Length > 1 && upto > 1
     requires Valid(); ensures Valid();
     ensures Sorted(list, 0, upto);
@@ -120,6 +121,7 @@ class TestedBloodList
                  && forall i :: 0 <= i < upto ==> list[i] != null;
     }
 
+    // Correspond to TestedBloodList.py::addBlood() -- inherited from BloodList
     method addBlood(blood: TestedBlood)
     ensures Valid(); requires Valid();
     requires UniqueId(); ensures UniqueId();
@@ -151,6 +153,7 @@ class TestedBloodList
 
     }
 
+    // Correspond to TestedBloodList.py::getBlood() -- inherited from BloodList
     method getBlood(id: int) returns (blood: TestedBlood)
     requires Valid(); ensures Valid();
     requires UniqueId(); ensures UniqueId();
@@ -180,6 +183,7 @@ class TestedBloodList
         }
     }
     
+    // Correspond to TestedBloodList.py::removeBlood() -- inherited from BloodList
     method removeBlood(blood: TestedBlood)
     requires Valid(); ensures Valid();
     requires UniqueId(); ensures UniqueId();
@@ -223,6 +227,7 @@ class TestedBloodList
         }
     }
 
+    // Correspond to TestedBloodList.py::extractBlood() -- inherited from BloodList
     method extractBlood(id: int) returns (blood: TestedBlood)
     requires Valid(); ensures Valid();
     requires UniqueId(); ensures UniqueId();
