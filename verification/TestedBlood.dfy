@@ -1,9 +1,9 @@
-datatype BloodType = O | OP | OM | AP | AM | BP | BM | ABP | ABM
+datatype TestedBloodType = O | OP | OM | AP | AM | BP | BM | ABP | ABM
 // Python Type:      O | O+ | O- | A+ | A- | B+ | B- | AB+ | AB-
 class TestedBlood {
     var id: int;
     var retrieval: int;
-    var bloodType: BloodType;
+    var bloodType: TestedBloodType;
     var expiration: int;
 
     predicate Valid()
@@ -12,7 +12,7 @@ class TestedBlood {
         expiration > retrieval
     }
 
-    constructor (bloodid: int, rdate: int, btype: BloodType, edate: int)
+    constructor (bloodid: int, rdate: int, btype: TestedBloodType, edate: int)
     requires edate > rdate
     ensures Valid()
     ensures id == bloodid && rdate == retrieval && edate == expiration && bloodType == btype

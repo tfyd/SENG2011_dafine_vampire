@@ -1,17 +1,27 @@
 include "TestedBlood.dfy"
 
-    predicate Sorted(list: array<TestedBlood>,low:int, high:int)
-    requires list != null 
-    requires 0 <= high <= list.Length
-    requires 0<=low<=high
-    requires forall i :: low <= i < high ==> list[i] != null
-    reads list, set m | low <= m < high :: list[m]`expiration
-    { forall j,k:: low<=j<k<high ==> list[j].expiration<=list[k].expiration }
+predicate Sorted(list: array<TestedBlood>,low:int, high:int)
+requires list != null 
+requires 0 <= high <= list.Length
+requires 0<=low<=high
+requires forall i :: low <= i < high ==> list[i] != null
+reads list, set m | low <= m < high :: list[m]`expiration
+{ forall j,k:: low<=j<k<high ==> list[j].expiration<=list[k].expiration }
 
 class TestedBloodList
 {
     var list: array<TestedBlood>;
     var upto: int;
+
+    predicate UniqueId()
+    requires Valid(); ensures Valid();
+    requires list != null 
+    requires 0 <= upto <= list.Length
+    requires forall i :: 0 <= i < upto ==> list[i] != null
+    reads this, this.list, this`upto, set m | 0 <= m < upto :: list[m]`id;
+    {
+        forall j,k:: 0<=j<k<upto ==> list[j].id != list[k].id
+    }
 
     predicate Valid()
     reads this, this.list, this`upto;
@@ -20,9 +30,11 @@ class TestedBloodList
         && forall i :: 0 <= i < upto ==> list[i] != null
     }
 
+
     constructor(size: int)
     requires size > 0;
     ensures Valid(); 
+    ensures UniqueId();
     ensures fresh(list);
     ensures this.upto == 0;
     modifies this
@@ -34,10 +46,12 @@ class TestedBloodList
     // Print for each of blood type
     // Instead of print, in dafny, we return the multiset
     // * Got stuck on verifying this one
-    method numOfStorageCurrent() returns (summary: multiset<BloodType>)
+    method numOfStorageCurrent() returns (summary: multiset<TestedBloodType>)
     requires Valid(); ensures Valid();
+    requires UniqueId(); ensures UniqueId();
+    ensures list == old(list);
     {
-        var types: seq<BloodType> := []; 
+        var types: seq<TestedBloodType> := []; 
         var i := 0;
         while (i < upto) 
             invariant 0 <= i <= upto;
@@ -51,6 +65,8 @@ class TestedBloodList
 
     method testedBloodNum() returns (num: int)
     ensures Valid(); requires Valid();
+    requires UniqueId(); ensures UniqueId();
+    ensures list == old(list);
     ensures num == upto;
     {
         num := upto;
@@ -65,7 +81,9 @@ class TestedBloodList
     ensures multiset(list[..upto]) == multiset(old(list[..upto]));
     ensures upto == old(upto);
     ensures list != null;
+    requires UniqueId(); ensures UniqueId();
     modifies list;
+    ensures list == old(list);
     {
         var up:=1;
         while (up < upto)
@@ -78,6 +96,7 @@ class TestedBloodList
         invariant multiset(list[..upto]) == multiset(old(list[..upto]));
         invariant list != null && list.Length > 0 && 0 <= upto <= list.Length
                    && forall i :: 0 <= i < upto ==> list[i] != null
+        invariant UniqueId();
         {
             var down := up; 
             while (down >= 1 && list[down-1].expiration > list[down].expiration)
@@ -90,6 +109,7 @@ class TestedBloodList
             invariant multiset(list[..upto]) == multiset(old(list[..upto]));
             invariant list != null && list.Length > 0 && 0 <= upto <= list.Length
                       && forall i :: 0 <= i < upto ==> list[i] != null
+            invariant UniqueId();
             {
                 list[down-1], list[down] := list[down], list[down-1];
                 down:=down-1;
@@ -102,7 +122,12 @@ class TestedBloodList
 
     method addBlood(blood: TestedBlood)
     ensures Valid(); requires Valid();
-    requires blood != null
+    requires UniqueId(); ensures UniqueId();
+    ensures list == old(list) || fresh(list)
+    requires blood != null;
+    requires list != null;
+    requires forall i :: 0 <= i < upto  ==> list[i]!=null;
+    requires forall i :: 0 <= i < upto  ==> list[i].id != blood.id;
     ensures upto > 0
     ensures list[upto-1] == blood;
     ensures upto == old(upto) + 1;
@@ -128,6 +153,7 @@ class TestedBloodList
 
     method getBlood(id: int) returns (blood: TestedBlood)
     requires Valid(); ensures Valid();
+    requires UniqueId(); ensures UniqueId();
     ensures blood != null ==> exists t :: 0 <= t < upto && list[t] == blood;
     ensures blood == null ==> forall t :: 0 <= t < upto ==> list[t] != blood;
     ensures blood != null ==> blood.id == id;
@@ -156,6 +182,7 @@ class TestedBloodList
     
     method removeBlood(blood: TestedBlood)
     requires Valid(); ensures Valid();
+    requires UniqueId(); ensures UniqueId();
     modifies this.list, this`upto
     requires upto > 0;
     requires exists t :: 0 <= t < upto && list[t] == blood;
@@ -165,6 +192,8 @@ class TestedBloodList
                     && (forall k :: 0 <= k < t ==> list[k] == old(list[k]))
                     && (forall q :: t < q < old(upto) ==> list[q-1] == old(list[q]))
                     );
+    ensures (forall t :: 0 <= t < upto ==> list[t].id != blood.id);
+    ensures list == old(list);
     {
         var i:=0;
         var bloodFound := false;
@@ -196,6 +225,7 @@ class TestedBloodList
 
     method extractBlood(id: int) returns (blood: TestedBlood)
     requires Valid(); ensures Valid();
+    requires UniqueId(); ensures UniqueId();
     ensures blood != null ==> upto == old(upto-1);
     ensures blood == null ==> upto == old(upto);
     ensures blood == null ==> old(list[0..upto]) == list[0..upto];
@@ -203,9 +233,17 @@ class TestedBloodList
                             && old(list[0..t]) == list[0..t]
                             && old(list[t+1..old(upto)]) == list[t..upto]
                             );
+    ensures (blood != null) ==> (exists t :: 0 <= t < old(upto) && old(list[t]) == blood
+                        && (forall k :: 0 <= k < t ==> list[k].expiration == old(list[k]).expiration)
+                        && (forall q :: t < q < old(upto) ==> list[q-1].expiration == old(list[q]).expiration)
+                        );
+    ensures (blood != null) ==> (forall t :: 0 <= t < upto ==> list[t].id != id);
     ensures blood != null ==> blood.id == id;
     ensures (exists t :: 0 <= t < old(upto) && old(list[t]).id == id) ==> blood != null;
     ensures (forall t :: 0 <= t < old(upto) ==> old(list[t]).id != id) ==> blood == null;
+    ensures blood == null ==> (forall t :: 0 <= t < upto ==> list[t].id != id);
+    ensures (forall t :: 0 <= t < upto ==> list[t].id != id);
+    ensures list == old(list);
     modifies this.list, this`upto
     {
         blood := getBlood(id);
