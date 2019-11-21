@@ -12,7 +12,7 @@ reads blood;
 {
     blood.expiration < timenow
 }
-/*
+
 // go through the list, check if the blood is exp
 // if exp, move from the list
 // Correspond to Dispose::dispose()
@@ -99,8 +99,7 @@ method dispose(testedlist: TestedBloodList, disposedlist: DisposedBloodList, tim
         disposedlist.addBlood(newlydisposed);
         c := c - { y };
     }
-    assert h == toBeRemoved;
-}*/
+}
 
 // var blood := testedlist.extractBlood(testedlist.list[i].id);
 // var newlydisposed := new DisposedBlood(blood.id);
