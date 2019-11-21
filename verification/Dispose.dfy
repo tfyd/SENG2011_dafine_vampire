@@ -61,7 +61,7 @@ method dispose(testedlist: TestedBloodList, disposedlist: DisposedBloodList, tim
     invariant forall id :: id in toBeRemoved ==> (exists k :: 0 <= k < i
                                                     && testedlist.list[k].id == id 
                                                     && testedlist.list[k].expiration <= timenow);
-    invariant forall j :: 0 <= j < i && testedlist.list[j].expiration <= timenow ==> exists id :: id in toBeRemoved && id == testedlist.list[j].id;
+    invariant forall j :: (0 <= j < i && testedlist.list[j].expiration <= timenow) ==> exists id :: id in toBeRemoved && id == testedlist.list[j].id;
     {
         if (testedlist.list[i].expiration <= timenow) {
             toBeRemoved := toBeRemoved + {testedlist.list[i].id};
@@ -69,21 +69,28 @@ method dispose(testedlist: TestedBloodList, disposedlist: DisposedBloodList, tim
         i := i + 1;
     }
 
+    assert forall id :: id in toBeRemoved ==> (exists k :: 0 <= k < testedlist.upto
+                                                 && testedlist.list[k].id == id 
+                                                 && testedlist.list[k].expiration <= timenow);
+
+    assert forall j :: 0 <= j < testedlist.upto && testedlist.list[j].expiration <= timenow ==> (exists id :: id in toBeRemoved && id == testedlist.list[j].id);
 
     var c := toBeRemoved;
-    ghost var h : set<int> := {};
     while ( c != {} )
     invariant testedlist.Valid(); invariant disposedlist.Valid();
     invariant testedlist.UniqueId(); invariant disposedlist.UniqueId();
     invariant testedlist.list == old(testedlist.list); invariant disposedlist.list == old(disposedlist.list) || fresh(disposedlist.list);
     invariant forall id :: id in c  ==> (forall k :: 0 <= k < disposedlist.upto ==> id != disposedlist.list[k].id);
     invariant forall id :: (id in old(c) && ! (id in c)) ==> (forall j :: 0 <= j < testedlist.upto ==> testedlist.list[j].id != id);
-    invariant c + h == toBeRemoved;
+    invariant c <= toBeRemoved;
     // invariant forall id :: id in c ==> (exists k :: 0 <= k < testedlist.upto
-    //                                                 && testedlist.list[k].id == id 
-    //                                                 && testedlist.list[k].expiration <= timenow);
-    // invariant forall j :: 0 <= j < i && testedlist.list[j].expiration <= timenow ==> (exists id :: id in c && id == testedlist.list[j].id);
-    // invariant forall j :: 0 <= j < testedlist.upto ==> (testedlist.list[j].expiration > timenow || (exists id :: id in c && testedlist.list[j].id == id));
+    //                                              && testedlist.list[k].id == id 
+    //                                              && testedlist.list[k].expiration <= timenow);
+    // invariant forall j :: 0 <= j < testedlist.upto && testedlist.list[j].expiration <= timenow ==> (exists id :: id in toBeRemoved && id == testedlist.list[j].id);
+    
+    // Can not prove this line
+    // invariant forall j :: 0 <= j < testedlist.upto ==> (testedlist.ist[j].expiration > timenow || (exists id :: id in c && testedlist.list[j].id == id));
+    
     decreases c;
     {
         var y :| y in c;
@@ -91,6 +98,5 @@ method dispose(testedlist: TestedBloodList, disposedlist: DisposedBloodList, tim
         var extracted := testedlist.extractBlood(y);
         disposedlist.addBlood(newlydisposed);
         c := c - { y };
-        h := h + { y };
     }
 }

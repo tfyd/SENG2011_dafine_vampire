@@ -291,10 +291,12 @@ class TestedBloodList
 //     var removed := bloodlist.extractBlood(5);
 //     assert removed == null;
 //     assert bloodlist.upto == 3;
+//     assert forall i :: 0 <= i < bloodlist.upto ==> bloodlist.list[i].id != 5;
 
 //     var removed1 := bloodlist.extractBlood(blood3.id);
 //     assert removed1.id == blood3.id;
 //     assert bloodlist.upto == 2;
+//     assert forall i :: 0 <= i < bloodlist.upto ==> bloodlist.list[i].id != blood3.id;
 
 //     // id = 5 does't exist
 //     var removed2 := bloodlist.extractBlood(5);
