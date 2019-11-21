@@ -152,6 +152,8 @@ class TestingBloodList
     ensures blood != null ==> blood.id == id;
     ensures (exists t :: 0 <= t < old(upto) && old(list[t]).id == id) ==> blood != null;
     ensures (forall t :: 0 <= t < old(upto) ==> old(list[t]).id != id) ==> blood == null;
+    ensures blood == null ==> (forall t :: 0 <= t < upto ==> list[t].id != id);
+    ensures (forall t :: 0 <= t < upto ==> list[t].id != id);
     ensures list == old(list);
     modifies this.list, this`upto
     {
