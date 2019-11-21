@@ -24,33 +24,22 @@ method dispose(testedlist: TestedBloodList, disposedlist: DisposedBloodList, tim
     requires disposedlist != null;
     requires testedlist.Valid();
     requires disposedlist.Valid();
-    requires testedlist.UniqueId();
-    requires disposedlist.UniqueId();
     modifies testedlist;
     modifies disposedlist;
-    ensures testedlist.Valid();
-    ensures disposedlist.Valid();
-    ensures testedlist != null;
-    ensures disposedlist != null;
+    modifies testedlist.list;
+    modifies disposedlist.list;
 {
     var i := 0;
-    var toBeRemoved : seq<int> := []; 
     while (i < testedlist.list.Length)
+    invariant testedlist.Valid();
     invariant 0 <= i <= testedlist.list.Length;
-    invariant forall id :: id in toBeRemoved ==> (exists i :: 0 <= i < testedlist.upto && testedlist.list[i].id == id);
     invariant forall j :: 0 <= j < i ==> testedlist.list[j].expiration > timenow;
+    decreases testedlist.list.Length - i;
     {
         if (testedlist.list[i].expiration <= timenow) {
-            toBeRemoved := toBeRemoved + [testedlist.list[i].id];
+            var blood := testedlist.extractBlood(testedlist.list[i].id);
+        } else {
+            i := i + 1;
         }
-        i := i + 1;
     }
 }
-
-// var blood := testedlist.extractBlood(testedlist.list[i].id);
-// var newlydisposed := new DisposedBlood(blood.id);
-// disposedlist.addBlood(newlydisposed);
-
-        // invariant 0 <= i <= testedlist.list.Length;
-        // invariant forall j :: 0 <= j < i ==> testedlist.list[j].expiration > timenow;
-        // decreases testedlist.list.Length - i;

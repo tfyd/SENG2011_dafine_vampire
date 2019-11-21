@@ -13,6 +13,16 @@ class TestedBloodList
     var list: array<TestedBlood>;
     var upto: int;
 
+    predicate UniqueId()
+    requires Valid(); ensures Valid();
+    requires list != null 
+    requires 0 <= upto <= list.Length
+    requires forall i :: 0 <= i < upto ==> list[i] != null
+    reads this, this.list, this`upto, set m | 0 <= m < upto :: list[m]`id;
+    {
+        forall j,k:: 0<=j<k<upto ==> list[j].id != list[k].id
+    }
+
     predicate Valid()
     reads this, this.list, this`upto;
     {
@@ -20,9 +30,11 @@ class TestedBloodList
         && forall i :: 0 <= i < upto ==> list[i] != null
     }
 
+
     constructor(size: int)
     requires size > 0;
     ensures Valid(); 
+    ensures UniqueId();
     ensures fresh(list);
     ensures this.upto == 0;
     modifies this
@@ -36,9 +48,7 @@ class TestedBloodList
     // * Got stuck on verifying this one
     method numOfStorageCurrent() returns (summary: multiset<BloodType>)
     requires Valid(); ensures Valid();
-    ensures upto = old(upto);
-    ensures list = old(list);
-    
+    requires UniqueId(); ensures UniqueId();
     {
         var types: seq<BloodType> := []; 
         var i := 0;
@@ -54,6 +64,7 @@ class TestedBloodList
 
     method testedBloodNum() returns (num: int)
     ensures Valid(); requires Valid();
+    requires UniqueId(); ensures UniqueId();
     ensures num == upto;
     {
         num := upto;
@@ -68,6 +79,7 @@ class TestedBloodList
     ensures multiset(list[..upto]) == multiset(old(list[..upto]));
     ensures upto == old(upto);
     ensures list != null;
+    requires UniqueId(); ensures UniqueId();
     modifies list;
     {
         var up:=1;
@@ -81,6 +93,7 @@ class TestedBloodList
         invariant multiset(list[..upto]) == multiset(old(list[..upto]));
         invariant list != null && list.Length > 0 && 0 <= upto <= list.Length
                    && forall i :: 0 <= i < upto ==> list[i] != null
+        invariant UniqueId();
         {
             var down := up; 
             while (down >= 1 && list[down-1].expiration > list[down].expiration)
@@ -93,6 +106,7 @@ class TestedBloodList
             invariant multiset(list[..upto]) == multiset(old(list[..upto]));
             invariant list != null && list.Length > 0 && 0 <= upto <= list.Length
                       && forall i :: 0 <= i < upto ==> list[i] != null
+            invariant UniqueId();
             {
                 list[down-1], list[down] := list[down], list[down-1];
                 down:=down-1;
@@ -105,7 +119,11 @@ class TestedBloodList
 
     method addBlood(blood: TestedBlood)
     ensures Valid(); requires Valid();
-    requires blood != null
+    requires UniqueId(); ensures UniqueId();
+    requires blood != null;
+    requires list != null;
+    requires forall i :: 0 <= i < upto  ==> list[i]!=null;
+    requires forall i :: 0 <= i < upto  ==> list[i].id != blood.id;
     ensures upto > 0
     ensures list[upto-1] == blood;
     ensures upto == old(upto) + 1;
@@ -131,6 +149,7 @@ class TestedBloodList
 
     method getBlood(id: int) returns (blood: TestedBlood)
     requires Valid(); ensures Valid();
+    requires UniqueId(); ensures UniqueId();
     ensures blood != null ==> exists t :: 0 <= t < upto && list[t] == blood;
     ensures blood == null ==> forall t :: 0 <= t < upto ==> list[t] != blood;
     ensures blood != null ==> blood.id == id;
@@ -159,6 +178,7 @@ class TestedBloodList
     
     method removeBlood(blood: TestedBlood)
     requires Valid(); ensures Valid();
+    requires UniqueId(); ensures UniqueId();
     modifies this.list, this`upto
     requires upto > 0;
     requires exists t :: 0 <= t < upto && list[t] == blood;
@@ -168,6 +188,7 @@ class TestedBloodList
                     && (forall k :: 0 <= k < t ==> list[k] == old(list[k]))
                     && (forall q :: t < q < old(upto) ==> list[q-1] == old(list[q]))
                     );
+    ensures (forall t :: 0 <= t < upto ==> list[t].id != blood.id);
     {
         var i:=0;
         var bloodFound := false;
@@ -199,6 +220,7 @@ class TestedBloodList
 
     method extractBlood(id: int) returns (blood: TestedBlood)
     requires Valid(); ensures Valid();
+    requires UniqueId(); ensures UniqueId();
     ensures blood != null ==> upto == old(upto-1);
     ensures blood == null ==> upto == old(upto);
     ensures blood == null ==> old(list[0..upto]) == list[0..upto];
@@ -206,6 +228,7 @@ class TestedBloodList
                             && old(list[0..t]) == list[0..t]
                             && old(list[t+1..old(upto)]) == list[t..upto]
                             );
+    ensures (blood != null) ==> (forall t :: 0 <= t < upto ==> list[t].id != id);
     ensures blood != null ==> blood.id == id;
     ensures (exists t :: 0 <= t < old(upto) && old(list[t]).id == id) ==> blood != null;
     ensures (forall t :: 0 <= t < old(upto) ==> old(list[t]).id != id) ==> blood == null;
