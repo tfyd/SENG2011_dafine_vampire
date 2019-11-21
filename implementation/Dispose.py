@@ -1,5 +1,4 @@
 from TestedBloodList import TestedBloodList
-from DisposedBlood import DisposedBlood
 from DisposedBloodList import DisposedBloodList
 from EmailSender import EmailSender
 from BeautifulPrint import BeautifulPrint
