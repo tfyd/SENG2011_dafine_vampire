@@ -1,5 +1,5 @@
 # SENG2011 Project Vampire - Dafine
-## Due: Unknown
+## Due: Friday, 22 November 2019, 21:00
 
 ### Spec & Code
 
@@ -13,3 +13,4 @@
 
 ### Submit 
 + `give se2011 ireport ireport.pdf`
++ `give se2011 freport freport.pdf`
