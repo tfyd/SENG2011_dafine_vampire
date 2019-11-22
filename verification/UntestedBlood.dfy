@@ -4,7 +4,7 @@ class UntestedBlood {
 
     constructor (bloodid: int, rdate: int)
     ensures id == bloodid && rdate == retrieval
-    modifies this
+    modifies this`id, this`retrieval
     {
         id := bloodid;
         retrieval := rdate;

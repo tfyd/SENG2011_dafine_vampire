@@ -3,7 +3,7 @@ include "TestedBloodList.dfy"
 
 // remove from disposedlist
 // Correspond to StorehouseManager.py::dispose()
-method dispose(id: int, list: DisposedBloodList)
+method doDispose(id: int, list: DisposedBloodList)
 requires list != null
 requires list.Valid(); ensures list.Valid()
 requires list.UniqueId(); ensures list.UniqueId()
