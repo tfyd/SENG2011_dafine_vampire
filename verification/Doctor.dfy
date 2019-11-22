@@ -8,8 +8,8 @@ include "ReservedBloodList.dfy"
 
 method reserveBlood(id: int, testedlist: TestedBloodList, reservedlist: ReservedBloodList) 
     requires testedlist != null;
- 
     requires reservedlist != null;
+    requires testedlist.list != reservedlist.list;
     requires testedlist.Valid();
     requires reservedlist.Valid();
     requires testedlist.UniqueId();
@@ -53,14 +53,14 @@ method reserveBlood(id: int, testedlist: TestedBloodList, reservedlist: Reserved
 // Correspond to Doctor.py::removeReservation()
 method removeReservation(id: int, testedlist: TestedBloodList, reservedlist: ReservedBloodList)
     requires testedlist != null;
- 
     requires reservedlist != null;
+    requires testedlist.list != reservedlist.list;
     requires testedlist.Valid();
     requires reservedlist.Valid();
     requires testedlist.UniqueId();
     requires reservedlist.UniqueId();
     // blood id must be valid
-    requires exists t :: (0 <= t < testedlist.upto && testedlist.list[t].id == id);
+    requires exists t :: (0 <= t < reservedlist.upto && reservedlist.list[t].id == id);
     // blood id must be unique among two lists
     requires forall i :: 0 <= i < testedlist.upto  ==> 
                 (forall k :: 0 <= k < reservedlist.upto ==> 
@@ -79,8 +79,8 @@ method removeReservation(id: int, testedlist: TestedBloodList, reservedlist: Res
     ensures reservedlist != null;
     ensures reservedlist == old(reservedlist);
     ensures testedlist == old(testedlist);
-    ensures testedlist.list == old(testedlist.list); 
     ensures testedlist.list == old(testedlist.list) || fresh(testedlist.list);
+    ensures reservedlist.list == old(reservedlist.list);
     ensures testedlist.upto == old(testedlist.upto) + 1;
     ensures reservedlist.upto == old(reservedlist.upto) - 1;
     // Successfully Removed
